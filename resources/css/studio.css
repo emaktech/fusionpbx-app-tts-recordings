@@ -1,0 +1,41 @@
+/*
+AI Recording Studio CSS
+Author: Corey Moullas
+Company: emak Telecom
+Last Modified: 2021-11-17
+*/
+
+#recording_text {
+	width: 100% !important;
+	max-width: 100% !important;
+	height: 400px !important;
+}
+
+.slider {
+  -webkit-appearance: none;
+  height: 7px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; 
+  background: #000000;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #000000;
+  cursor: pointer;
+}

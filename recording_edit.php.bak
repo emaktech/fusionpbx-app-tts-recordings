@@ -74,8 +74,7 @@
 		$recording_text = $_POST["recording_text"];
 		$pitch = $_POST["pitch"];
 		$speaking_rate = $_POST["speaking_rate"];
-		$generated_ssml = $_POST["generated_ssml"];
-		
+
 		//sanitize recording name
 		$recording_name = str_replace("'", '', $recording_name);
 	}
@@ -144,7 +143,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//generate SSML from text if format is plain text
 				if ($is_text_ssml != "true") {
 					$recording_ssml = '<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
-					$recording_ssml .= '<voice name="' . $recording_voice . '"><s /><mstts:express-as style="Default"><prosody rate="';
+					$recording_ssml .= '<voice name="' . $recording_voice . '"><prosody rate="';
 					$speaking_rate_val = floatval($speaking_rate);
 					if ($speaking_rate_val < 0) {
 						$speaking_rate_val = 1.0;
@@ -160,14 +159,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					else if ($pitch_val > 3.0) {
 						$pitch_val = 3.0;
 					}
-					$recording_ssml .= round(($pitch_val - 1.0) * 50.0) . '%">' . $recording_text . '<break time="100ms" /></prosody></mstts:express-as><s /></voice></speak>';
-					
+					$recording_ssml .= round(($pitch_val - 1.0) * 50.0) . '%">' . $recording_text . '</prosody></voice></speak>';
 				}
 				else {
 					$recording_ssml = $recording_text;
 				}
 
-				
 			//(re)generate tts audio
 				if ($action == "add") {
 					$date_created = time();
@@ -219,7 +216,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$array['tts_recordings'][0]['recording_filename'] = $recording_filename;
 				$array['tts_recordings'][0]['date_created'] = $date_created;
 				$array['tts_recordings'][0]['date_updated'] = $date_updated;
-				$array['tts_recordings'][0]['recording_ssml'] = $recording_ssml;
 
 			//assign temp permission
 				$p = new permissions;
@@ -303,8 +299,39 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	$document['title'] = $text['title-tts-recording'];
 	require_once "resources/header.php";
+
+//styling
 ?>
-<link href="resources/css/studio.css" rel="stylesheet">
+<style>
+.slider {
+  -webkit-appearance: none;
+  height: 7px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; 
+  background: #000000;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #000000;
+  cursor: pointer;
+}
+</style>
 <?php
 
 //show the content
@@ -329,10 +356,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td width='10%' class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-recording_name']."\n";
 	echo "</td>\n";
-	echo "<td width='90%' class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_name' maxlength='255' value=\"".escape($recording_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-recording_name']."\n";
@@ -351,13 +378,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if (!isset($recording_voice) || empty($recording_voice)) {
 			$recording_voice = $default_voice;
 		}
-		print_r($voices);
 		foreach ($voices as $voice) {
 			$selected = $recording_voice == $voice['ShortName'] ? "selected='selected'" : null;
-			if ($voice["VoiceType"] == "Neural" && in_array($voice["Locale"], ['en-US','en-CA', 'fr-CA', 'fr-FR'] ) ) {
-				
-				echo "		<option value='".urlencode($voice["ShortName"])."' ".$selected.">".escape($voice['Locale'])." ".escape($voice['DisplayName'])." (".escape($voice['Gender']).")"."</option>\n";
-			}
+			echo "		<option value='".urlencode($voice["ShortName"])."' ".$selected.">".escape($voice['Name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -367,12 +390,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('tts_recording_ssml')) {
 	echo "<tr>\n";
-	}
-	else {
-	echo "<tr style='display: none;'>";
-	}
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-is_text_ssml']."\n";
 	echo "</td>\n";
@@ -392,29 +410,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-recording_text']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea type='text' id='recording_text' name='recording_text' class='formfld'>".$recording_text."</textarea>\n";
+	echo "	<textarea type='text' id='recording_text' name='recording_text' class='formfld' style='width: 65%; height: 175px;'>".$recording_text."</textarea>\n";
 	echo "<br />\n";
 	echo "	".$text['description-recording_text']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-recording_pronunciation']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='recording_pronunciation' id='recording_pronunciation'>\n";
-	echo "		<option value='' >Default</option>\n";
-	echo "		<option value='address' >Address</option>\n";
-	echo "		<option value='cardinal' >Cardinal, Number</option>\n";
-	echo "		<option value='characters' >Characters, Spell-out</option>\n";
-	echo "		<option value='date' >Date</option>\n";
-		
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-recording_voice']."\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -634,7 +632,7 @@ function tts_play_pause() {
 			blockGeneratedSsml.style.display = 'none';
 		} else {
 			synthesisSsml = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"http://www.w3.org/2001/mstts\" xmlns:emo=\"http://www.w3.org/2009/10/emotionml\" version=\"1.0\" xml:lang=\"en-US\">\n";
-			synthesisSsml += "<voice name=\"" + voiceOptions.value + "\"><s /><mstts:express-as style='default'><prosody rate=\"";
+			synthesisSsml += "<voice name=\"" + voiceOptions.value + "\"><prosody rate=\"";
 			speaking_rate_val = parseFloat(speakingRate.value);
 			if (isNaN(speaking_rate_val)) {
 				speaking_rate_val = 1.00;
@@ -654,7 +652,7 @@ function tts_play_pause() {
 			} else if (pitch_val > 3.0) {
 				pitch_val = 3.0;
 			}
-			synthesisSsml += Math.round((pitch_val - 1.0) * 50.0) + "%\">" + recordingText.value + "<break time='100ms' /></prosody></mstts:express-as><s /></voice></speak>";
+			synthesisSsml += Math.round((pitch_val - 1.0) * 50.0) + "%\">" + recordingText.value + "</prosody></voice></speak>";
 			generatedSsml.value = synthesisSsml;
 			blockGeneratedSsml.style.display = "";
 		}
