@@ -2,8 +2,8 @@
 1. ```cd /var/www/fusionpbx/app```
 2. ```git clone https://github.com/emaktech/tts_recordings.git tts_recordings```
 3. ```chown -R www-data:www-data /var/www/fusionpbx/app/tts_recordings```
-4 Go to GUI
-5 Upgrades -> SCHEMA; APP DEFAULTS; MENU DEFAULTS; PERMISSION DEFAULTS
+4. Go to GUI
+5. Upgrades -> SCHEMA; APP DEFAULTS; MENU DEFAULTS; PERMISSION DEFAULTS
 6. Log out and back in
 7. Advanced -> Default Settings -> Tts Recordings
 8. Set azure_subscription_key and azure_region to your Microsoft Azure Cognitive Speech Services subscription key and the region you wish to use for its API requests respectively
