@@ -767,6 +767,7 @@ function tts_stop() {
 	highlightDiv.innerHTML = "";
 	blockHighlight.style.display = "none";
 }
+//alert('hi');
 </script>
 <?php
 //include the footer
