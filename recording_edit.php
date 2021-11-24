@@ -765,7 +765,7 @@ function tts_stop() {
 	highlightDiv.innerHTML = "";
 	blockHighlight.style.display = "none";
 }
-//testt
+//testing
 </script>
 
 <?php
