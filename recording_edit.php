@@ -874,7 +874,6 @@ function addTagSel(tag_before,tag_after, idelm) {
   
  }
 }
-//testing
 </script>
 <?php
 //include the footer
