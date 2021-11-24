@@ -768,6 +768,7 @@ function tts_stop() {
 	blockHighlight.style.display = "none";
 }
 //alert('hi');
+//test
 </script>
 <?php
 //include the footer
