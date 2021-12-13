@@ -1,0 +1,184 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.List{
+  display: inline-block;
+  border: 1px solid #ddd;
+  font-size: 12px;
+  margin: 5px;
+  padding: 2px;
+}
+.List1{
+  display: inline-block;
+  font-size: 22px;
+  margin: 5px;
+  padding: 2px;
+  color: #0177d3;
+}
+.namedisplay{
+  display: inline-block;
+  font-size: 14px;
+  margin: 5px;
+  padding: 2px;
+  color: #0177d3;
+}
+.col-ply{
+  color: #0177d3;
+  font-size: 12px;
+}
+.user{
+  float: right;
+}
+.App-link {
+  color: #61dafb;
+}
+.languagechoose{
+  width: 100%;
+  font-size: 12px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ln_stack {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  background-color:rgb(253 253 253 / 0%);
+  box-shadow: 1px 1px 4px 1px #ebebeb;
+}
+.ln_stack .listing {
+  width: 100%;
+}
+.ln_stack .blocks {
+  display: block;
+  float: left;
+  cursor: pointer;
+  padding: 0.6rem 0.25rem 0px;
+  width: 22.5%;
+  overflow: hidden;
+  text-align: center;
+}
+.checked{
+  display: none;
+}
+.ln_stack .blocks .text {
+  font-size: 12px;
+    width: 64px;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.ln_stack .blocks .MuiCheckbox-root {
+  background: rgb(0, 120, 212);
+  color: #ffffff;
+  padding: 10px 15px;
+}
+hr:not([size]) {
+  height: 1px;
+  width: 100%;
+  margin: 0px;
+}
+#textid {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.rate{
+  border-bottom: 2px solid #d29203;
+    padding-bottom: 5px;
+}
+.rhap_stacked .rhap_controls-section {
+  margin-top: 8px;
+  max-width: 20%;
+}
+.rhap_progress-section {
+
+  max-width: 80%;
+}
+.rhap_additional-controls {
+  display: none!important;
+
+}
+.rhap_main {
+
+  flex-direction: row-reverse !important;
+
+}
+.rhap_volume-controls {
+  display: none!important;
+
+}
+.rhap_main-controls-button {
+
+  color: #0177d3!important;
+ 
+}
+.rhap_progress-indicator {
+
+  background: #0376d2!important;
+
+  box-shadow: rgb(5 117 209) 0 0 5px!important;
+}
+.rhap_progress-filled {
+
+  background-color: #0376d2!important;
+
+  border-radius: 2px;
+}
+.btnplay{
+  border: 1px solid #0376d2;
+  position: absolute;
+  margin-left: 62px;
+  margin-top: 21px;
+  z-index: 999999;
+  box-shadow: 0 0 0 0.25rem rgb(255 255 255 / 0%)!important;
+  padding: 16px;
+  border-radius: 40px;
+}
+.css-i4bv87-MuiSvgIcon-root {
+
+  color: #0376d2;
+}
+.blocks .fa {
+  color: #f8f8f8 !important;
+}
+.fa {
+  color: #0376d2;
+}
+.voiceclass{
+  color: #0376d2;
+}
+.Pauseclass{
+  color: #851372;
+}
