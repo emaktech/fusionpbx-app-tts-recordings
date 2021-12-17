@@ -33,7 +33,7 @@
 .List1{
   display: inline-block;
   font-size: 22px;
-  margin: 5px;
+  margin: 3px;
   padding: 2px;
   color: #0177d3;
 }
@@ -182,3 +182,25 @@ hr:not([size]) {
 .Pauseclass{
   color: #851372;
 }
+.spinner-audio{
+  position: absolute;
+  margin-left: 60px;
+  margin-top: 19px;
+  z-index: 999999;
+  padding: 16px;
+ 
+}
+.dropdown-menu {
+  z-index: 99999999;
+}
+.overdata{
+  height: 100px;
+    overflow-y: scroll;
+}
+  
+  .hidden{
+  display:none;
+  }
+  .opan{
+  display:block !important;
+  }

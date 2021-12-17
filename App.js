@@ -33,6 +33,7 @@ import AudioPlayer from "react-h5-audio-player";
 import 'react-h5-audio-player/lib/styles.css';
 
 export default function App() {
+
   const [checked, setChecked] = React.useState(false);
   const [showResults, setShowResults] = React.useState(true)
   const [open, setOpen] = React.useState(true);
@@ -45,13 +46,14 @@ export default function App() {
   const [Userstype, SetUserstype] = useState([]);
   const [ssml12, setssml12] = useState();
   const [ssml1, setssml1] = useState();
-  const [ssml2, setssml2] = useState('');
+  const [ssml2, setssml2] = useState([]);
   const [Gender1, setGender1] = useState('');
   const [LocalName1, setLocalName1] = useState('');
   const [DisplayName1, setDisplayName1] = useState('');
   const [LocaleName1, setLocaleName1] = useState('');
-  const [ssml3, setssml3] = useState('');
+  const [ssml3, setssml3] = useState([]);
   const [input, setinput] = useState('');
+  const [withoutbrak, setwithoutbrak] = useState();
   const [DisplayName, setDisplayName] = useState("");
   const [Gender, setGender] = useState("");
   const [demo, SetDemo] = useState([]);
@@ -64,8 +66,10 @@ export default function App() {
   const [value1, setValue1] = React.useState(20);
   const handleSliderChange = (event, newValue) => { setValue(newValue) };
   const [age, setAge] = React.useState('age');
-  const [isLoaded, setIsLoaded] = useState();
+  const [isLoaded, setIsLoaded] = useState(false);
   const Input = MuiInput;
+  const [divEditer, setdivEditer] = useState("opan");
+  const [ssmlEditer, setssmlEditer] = useState("hidden");
   const onClick = () => setShowResults(true)
   const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
@@ -87,12 +91,24 @@ export default function App() {
       setValue1(200);
     }
   };
-
   // ################################## Ssml to Voice  ########################## 
   const playsound = (event) => {
+    var defaultStartTag = '<voice xml:lang="en-US" xml:gender="Male" name="cy-GB-AledNeural">';
+    var defaultClosedTag = '</voice>';
     let date = textdata
-    console.log("mydata", date);
-    setIsLoaded(false);
+    let datalist = document.getElementById("textid").innerHTML;
+    var closetagBefore1 = '<speak version="1.0" xml:lang="en-US">';
+    var startAftertag1 = '</speak>';
+    if (datalist.length > 6) {
+      let substr = datalist.substring(0, 6);
+      if (substr != "<voice") {
+        let explodeData = datalist.split("<voice");
+        explodeData = explodeData[0];
+        date = closetagBefore1 + defaultStartTag + explodeData + ssml2 + ssml3 + defaultClosedTag + startAftertagfe + startAftertag1;
+        console.log("mydata", date);
+      }
+    }
+    setIsLoaded(true);
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
@@ -102,24 +118,32 @@ export default function App() {
       }, body: date
     })
       .then((response) => response.blob())
+
       .then((blob) => {
-        setIsLoaded(true);
-        console.log("mydata", blob);
         setWave(blob)
+        setIsLoaded(false);
         var blob = new Blob([blob]);
         var url = window.URL.createObjectURL(blob);
         console.log('MP3 URl: ', url);
         setWave(url)
-        setIsLoaded(true);
+
       })
       .catch(function (error) {
         console.log(error);
       })
-
   };
   const handleChange = (event) => {
+    if (event.target.checked) {
+      setdivEditer("hidden");
+      setssmlEditer("opan")
 
-    setChecked(event.target.checked);
+    }
+    else {
+      setdivEditer("opan");
+      setssmlEditer("hidden")
+    }
+    setChecked(event.target.checked)
+  
   };
   const handleClick = () => {
     setOpen(!open);
@@ -144,17 +168,20 @@ export default function App() {
   };
   // ##################################   Voice  ########################## 
   const Voice = (event) => {
+
     var name = event.currentTarget.children[1].dataset.name;
     var gender = event.currentTarget.children[1].dataset.gender;
     var lang = event.currentTarget.children[1].dataset.lang;
     var short = event.currentTarget.children[1].dataset.short;
     var tag_seltxt = addVoice('voice', 'textid', name, short, lang, gender);
+    console.log("tag_seltxt", tag_seltxt);
   };
-  function addVoice(tag, Voice, tagVal, shortvl, prevProps, prevState) {
+  function addVoice(tag_seltxt, Voice, tagVal, shortvl,) {
     var innertext1 = document.getElementById(Voice).innerHTML;
     var firstpart;
     var secondpart;
     var secondpart3;
+    var secondpart4;
     var thirdpart;
     var finaltag;
     var selectpart = window.getSelection().toString();
@@ -167,11 +194,13 @@ export default function App() {
       thirdpart = explode[1];
     else
       thirdpart = "";
-    secondpart3 = '<voice xml:lang="en-US" xml:gender="Male" name="' + shortvl + '">' + selectpart + '</voice>';
+    secondpart3 = '<voice xml:lang="en-US" name="' + shortvl + '">' + allssml + selectpart + '</voice>';
+    secondpart4 = '<voice xml:lang="en-US" name="' + shortvl + '">' + selectpart + '</voice>';
+    setwithoutbrak(secondpart4)
     if (ssml12 != "" && ssml12 != undefined)
-      secondpart3 = ssml12 + secondpart3;
-
+      secondpart3 = ssml12 + allssml + secondpart3;
     setssml12(secondpart3)
+
     console.log("secondpart3", secondpart3)
     secondpart = '<voice  data-name="' + tagVal + '"><span class="voiceclass">[' + tagVal + ']</span>' + selectpart + '</voice>';
     console.log("secondpart", secondpart)
@@ -179,10 +208,9 @@ export default function App() {
     var x = document.getElementById(Voice);
     x.innerHTML = finaltag;
     setssml1(innertext1)
-    console.log("innertext1", innertext1)
     return innertext1;
-
   }
+
   // ##################################   Rate  ########################## 
   const Rate = (event) => {
     var name = event.currentTarget.innerText;
@@ -213,15 +241,12 @@ export default function App() {
     finaltag = firstpart + secondpart + thirdpart;
     var x = document.getElementById(rate);
     x.innerHTML = finaltag;
-
     return innertext2;
-
   }
   // ##################################  Pause  ########################## 
   const Pause = (event) => {
     var name = event.currentTarget.innerText;
     var tag_seltxt = addPause('break ', 'textid', value1);
-    console.log("tag_seltxt123", tag_seltxt)
   };
   function addPause(tag, pause, value1) {
     var innertext3 = document.getElementById(pause).innerHTML;
@@ -242,16 +267,14 @@ export default function App() {
       thirdpart = "";
     secondpart = '<break class="Pause" data-name="' + value1 + '"><span class="Pauseclass">[' + value1 + 's' + ']</span>' + selectpart + '</break>';
     secondpart1 = '<break class="Pause" data-name="' + value1 + '">' + selectpart + '</break>';
-    setssml3(secondpart1)
     console.log("secondpart", secondpart1)
+    setssml3(secondpart1)
     localStorage.setItem("secondpart1", secondpart1);
     finaltag = firstpart + secondpart + thirdpart;
     var x = document.getElementById(pause);
     x.innerHTML = finaltag;
-
     return innertext3;
   }
-
   function newFunction(link) {
     document.body.appendChild(link);
     link.click();
@@ -260,11 +283,23 @@ export default function App() {
   var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
   var startAftertag = '</speak>';
   var startAftertagfe = ssml12;
-  var textdata = closetagBefore + startAftertagfe + startAftertag;
 
+  var allssml = ssml3 + ssml2;
+  console.log("allssml", allssml)
   const handleClick1 = () => {
     setOpen1(!open1);
   };
+  if (ssml2.length < 1) {
+    var textdata = closetagBefore + startAftertagfe + startAftertag;
+  } else if (ssml2.length < 1) {
+    var textdata = closetagBefore + ssml2 + startAftertag;
+  } else if (ssml3.length < 1) {
+    var textdata = closetagBefore + ssml3 + startAftertag;
+  }
+ 
+  else {
+    var textdata = closetagBefore + allssml + startAftertag;
+  }
   // ################################## Voice List  ########################## 
   useEffect(() => {
     fetch(
@@ -279,7 +314,6 @@ export default function App() {
       .then((response) => response.json())
       .then((data) => {
         SetUser(data);
-
         console.log("mydata", Userstype);
       })
       .catch((err) => {
@@ -306,21 +340,17 @@ export default function App() {
         console.log("myerr", err);
       })
   }, []);
-
   const saveUser = (items) => {
     console.log("itemssasadd", items);
-
     if (items) {
       setDisplayName(items.DisplayName);
       setGender(items.Gender)
       setLocalName(items.LocalName)
       setLocaleName(items.LocaleName)
-
     }
   };
-  console.log("Displaystyle", Displaystyle);
   const saveDatalist = (data) => {
-
+    console.log("demo.StyleName", data.StyleList)
     setDisplaystyle(data ? data.StyleList : 0);
     setDisplayName1(data.DisplayName);
     setGender1(data.Gender)
@@ -346,7 +376,6 @@ export default function App() {
   const handleChange9 = (event) => {
     setAge(event.target.value);
   };
-
 
   return (
     <Container fluid>
@@ -434,20 +463,26 @@ export default function App() {
               </Col>
             </Row>
           </div>
-          <button className="btn btnplay" onClick={playsound}></button>
-         
+          {
+            isLoaded ?
+              (
+                <div class="spinner-border spinner-audio text-light" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              ) : <button className="btn btnplay" onClick={playsound}></button>
+
+          }
           <AudioPlayer
             src={Wave} controls />
           <br></br>
-          {checked ?
-            <TextareaAutosize
-              aria-label="empty textarea"
-              className="hidden"
-              placeholder="Empty"
-              onChange={(e) => setinput(e.target.value)} value={textdata}
-              style={{ width: '100%', height: 500 }}
-            />
-            : <div contenteditable="true" className="abc hidden" id="textid" placeholder="Enter text" ></div>}
+          <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text"></div>
+          <TextareaAutosize
+            aria-label="empty textarea"
+            className={ssmlEditer}
+            placeholder="Empty"
+            onChange={(e) => setinput(e.target.value)} value={textdata}
+            style={{ width: '100%', height: 500 }}
+          />
         </Col>
         <Col xs={12} md={3} className="border-round">
           <List
@@ -509,58 +544,62 @@ export default function App() {
                   <ListItemText />
                 </ListItemButton>
                 <Col className="ln_stack" >
-
                   <div className="listing" id="answers" >
-                    {User.map((data) => (
-                      data.LocaleName == LocaleName ? (
-                        <div class="blocks" onClick={Voice} >
-                          <Checkbox onClick={() => saveDatalist(data)}
-                            {...label}
-
-                            icon={
-                              data.Gender == "Male" ? (
-                                <i class="fa fa-male"></i>
-                              ) :
-                                <i class="fa fa-female" aria-hidden="true"></i>
-                            }
-                            checkedIcon={
-                              data.Gender == "Male" ? (
-                                <i class="fa fa-male" aria-hidden="true"></i>
-                              ) :
-                                <i class="fa fa-female" aria-hidden="true"></i>
-                            }
-                          />
-                          <span className="text" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Locale} data-lang={data.DisplayName}>{data.DisplayName}</span>
+                    {
+                      LocaleName == "" || LocaleName == "undefined" && LocaleName == "null" ?
+                        (
+                          null
+                        ) : <div class="overdata">{User.map((data) => (
+                          data.LocaleName == LocaleName ? (
+                            <span class="blocks" onClick={Voice} >
+                              <Checkbox onClick={() => saveDatalist(data)}
+                                {...label}
+                                icon={
+                                  data.Gender == "Male" ? (
+                                    <i class="fa fa-male"></i>
+                                  ) :
+                                    <i class="fa fa-female" aria-hidden="true"></i>
+                                }
+                                checkedIcon={
+                                  data.Gender == "Male" ? (
+                                    <i class="fa fa-male" aria-hidden="true"></i>
+                                  ) :
+                                    <i class="fa fa-female" aria-hidden="true"></i>
+                                }
+                              />
+                              <span className="text" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Locale} data-lang={data.DisplayName}>{data.DisplayName}</span>
+                            </span>
+                          ) : null
+                        ))
+                        }
                         </div>
-
-                      ) : null
-                    ))}
-                    <hr />
-                    <div class="blocks1">
-                      <span className="LocaleName1 List">{LocaleName1}</span>
-                      <span className="Gender1 List" >{Gender1}</span>
-                      <span className="LocalName1 List">Public Voice</span>
-                    </div>
-                    {demo == '' && demo == 'undefined' ? (
-                      <span>
+                    }
+                    <hr />{
+                      DisplayName1 == "" || DisplayName1 == "undefined" && DisplayName1 == "null" ? (
+                        null
+                      ) : <span><div class="blocks1">
+                        <span className="List1 "><i class="fa fa-user-circle-o"></i></span>
+                        <span className="namedisplay ">{DisplayName1}</span>
+                        <span className=" List1 user"> <button className="btn col-ply"><i class="fa fa-play" ></i></button></span>
+                        {/* <i class="fa fa-pause" aria-hidden="true"></i> */}
+                      </div>
                         <div class="blocks1">
-                          <span className="List1 "><i class="fa fa-user-circle-o"></i></span>
-                          <span className="namedisplay ">{DisplayName1}</span>
-                          <span className=" List1 user"> <button className="btn col-ply"><i class="fa fa-play" ></i></button></span>
-                          {/* <i class="fa fa-pause" aria-hidden="true"></i> */}
+                          <span className="LocaleName1 List">{LocaleName1}</span>
+                          <span className="Gender1 List" >{Gender1}</span>
+                          <span className="LocalName1 List">Public Voice</span>
                         </div>
-                        <hr />
+                      </span>
+                    }
+                    {Displaystyle ? (
+                      <span>
+
                         <select class="form-select languagechoose" aria-label="Default select example">
                           <option selected>Speaking Style | Default</option>
                           {
-                            Displaystyle == '' && Displaystyle == 'undefined' ? (
-                              Displaystyle.map((data) => (
-                                data == '' && data == 'undefined' ? (
-                                  null
-                                ) : <option value="1">{data}</option>
-                              )
-                              )
-                            ) : null
+                            Displaystyle.map((data) => (
+                              <option value="1">{data}</option>
+                            )
+                            )
                           }
                         </select>
                       </span>
