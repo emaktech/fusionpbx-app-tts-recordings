@@ -1,6 +1,7 @@
 import React, { component, link } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
 import Container from "react-bootstrap/Container";
 import Dropdown from "react-bootstrap/Dropdown";
 import Switch from "@mui/material/Switch";
@@ -13,7 +14,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import StarBorder from "@mui/icons-material/StarBorder";
@@ -25,12 +26,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import "./App.css";
-import ReadingRules from "./components/ReadingRules";
 import Slider from "@mui/material/Slider";
 import MuiInput from "@mui/material/Input";
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AudioPlayer from "react-h5-audio-player";
 import 'react-h5-audio-player/lib/styles.css';
+import swal from 'sweetalert';
 
 export default function App() {
 
@@ -53,7 +54,6 @@ export default function App() {
   const [LocaleName1, setLocaleName1] = useState('');
   const [ssml3, setssml3] = useState([]);
   const [input, setinput] = useState('');
-  const [withoutbrak, setwithoutbrak] = useState();
   const [DisplayName, setDisplayName] = useState("");
   const [Gender, setGender] = useState("");
   const [demo, SetDemo] = useState([]);
@@ -70,7 +70,7 @@ export default function App() {
   const Input = MuiInput;
   const [divEditer, setdivEditer] = useState("opan");
   const [ssmlEditer, setssmlEditer] = useState("hidden");
-  const onClick = () => setShowResults(true)
+
   const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
   };
@@ -84,6 +84,7 @@ export default function App() {
       setValue(100);
     }
   };
+
   const handleBlur1 = () => {
     if (value1 < 0) {
       setValue1(0);
@@ -92,6 +93,7 @@ export default function App() {
     }
   };
   // ################################## Ssml to Voice  ########################## 
+
   const playsound = (event) => {
     var defaultStartTag = '<voice xml:lang="en-US" xml:gender="Male" name="cy-GB-AledNeural">';
     var defaultClosedTag = '</voice>';
@@ -104,8 +106,9 @@ export default function App() {
       if (substr != "<voice") {
         let explodeData = datalist.split("<voice");
         explodeData = explodeData[0];
-        date = closetagBefore1 + defaultStartTag + explodeData + ssml2 + ssml3 + defaultClosedTag + startAftertagfe + startAftertag1;
-        console.log("mydata", date);
+        date = closetagBefore1 + defaultStartTag + explodeData + defaultClosedTag + startAftertagfe + startAftertag1;
+        SetUserstype(date)
+        console.log("date", date)
       }
     }
     setIsLoaded(true);
@@ -118,7 +121,6 @@ export default function App() {
       }, body: date
     })
       .then((response) => response.blob())
-
       .then((blob) => {
         setWave(blob)
         setIsLoaded(false);
@@ -128,22 +130,38 @@ export default function App() {
         setWave(url)
 
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(() => {
+        swal("Failed to synthesize audio", "Make sure you've selected voices for the text.", {
+          buttons: [, "X"],
+        });
       })
   };
   const handleChange = (event) => {
+    var defaultStartTag = '<voice xml:lang="en-US" xml:gender="Male" name="en-US-JennyMultilingualNeural">';
+    var defaultClosedTag = '</voice>';
+    let date = textdata
+    let datalist = document.getElementById("textid").innerHTML;
+    var closetagBefore1 = '<speak version="1.0" xml:lang="en-US">';
+    var startAftertag1 = '</speak>';
+    if (datalist.length > 6) {
+      let substr = datalist.substring(0, 6);
+      if (substr != "<voice") {
+        let explodeData = datalist.split("<voice");
+        explodeData = explodeData[0];
+        date = closetagBefore1 + defaultStartTag + explodeData + defaultClosedTag + startAftertagfe + startAftertag1;
+        SetUserstype(date)
+        console.log("date", date)
+      }
+    }
     if (event.target.checked) {
       setdivEditer("hidden");
       setssmlEditer("opan")
-
     }
     else {
       setdivEditer("opan");
       setssmlEditer("hidden")
     }
     setChecked(event.target.checked)
-  
   };
   const handleClick = () => {
     setOpen(!open);
@@ -166,22 +184,24 @@ export default function App() {
   const handleClose = () => {
     setOpen5(false);
   };
+
   // ##################################   Voice  ########################## 
   const Voice = (event) => {
-
     var name = event.currentTarget.children[1].dataset.name;
     var gender = event.currentTarget.children[1].dataset.gender;
     var lang = event.currentTarget.children[1].dataset.lang;
     var short = event.currentTarget.children[1].dataset.short;
     var tag_seltxt = addVoice('voice', 'textid', name, short, lang, gender);
-    console.log("tag_seltxt", tag_seltxt);
+    
+
   };
-  function addVoice(tag_seltxt, Voice, tagVal, shortvl,) {
+  function addVoice(tag, Voice, tagVal, shortvl,dataitem) {
+  
+    debugger
     var innertext1 = document.getElementById(Voice).innerHTML;
     var firstpart;
     var secondpart;
     var secondpart3;
-    var secondpart4;
     var thirdpart;
     var finaltag;
     var selectpart = window.getSelection().toString();
@@ -189,28 +209,25 @@ export default function App() {
       return false;
     }
     var explode = innertext1.split(selectpart);
+    debugger
     firstpart = explode[0];
     if (typeof explode[1] != "undefined")
       thirdpart = explode[1];
     else
-      thirdpart = "";
-    secondpart3 = '<voice xml:lang="en-US" name="' + shortvl + '">' + allssml + selectpart + '</voice>';
-    secondpart4 = '<voice xml:lang="en-US" name="' + shortvl + '">' + selectpart + '</voice>';
-    setwithoutbrak(secondpart4)
+      thirdpart = explode[1];
+    secondpart3 = '<voice xml:lang="en-US" xml:gender="Male" name="' + shortvl + '">' + selectpart + '</voice>';
     if (ssml12 != "" && ssml12 != undefined)
-      secondpart3 = ssml12 + allssml + secondpart3;
-    setssml12(secondpart3)
-
-    console.log("secondpart3", secondpart3)
+      secondpart3 = ssml12 + secondpart3;
+    var voicetag = firstpart + secondpart3 + thirdpart;
+    setssml12(voicetag)
     secondpart = '<voice  data-name="' + tagVal + '"><span class="voiceclass">[' + tagVal + ']</span>' + selectpart + '</voice>';
-    console.log("secondpart", secondpart)
     finaltag = firstpart + secondpart + thirdpart;
     var x = document.getElementById(Voice);
     x.innerHTML = finaltag;
-    setssml1(innertext1)
-    return innertext1;
+   
+    console.log("innertext1", innertext1)
+    return false;
   }
-
   // ##################################   Rate  ########################## 
   const Rate = (event) => {
     var name = event.currentTarget.innerText;
@@ -247,6 +264,7 @@ export default function App() {
   const Pause = (event) => {
     var name = event.currentTarget.innerText;
     var tag_seltxt = addPause('break ', 'textid', value1);
+    console.log("tag_seltxt123", tag_seltxt)
   };
   function addPause(tag, pause, value1) {
     var innertext3 = document.getElementById(pause).innerHTML;
@@ -267,14 +285,15 @@ export default function App() {
       thirdpart = "";
     secondpart = '<break class="Pause" data-name="' + value1 + '"><span class="Pauseclass">[' + value1 + 's' + ']</span>' + selectpart + '</break>';
     secondpart1 = '<break class="Pause" data-name="' + value1 + '">' + selectpart + '</break>';
-    console.log("secondpart", secondpart1)
     setssml3(secondpart1)
+    console.log("secondpart", secondpart1)
     localStorage.setItem("secondpart1", secondpart1);
     finaltag = firstpart + secondpart + thirdpart;
     var x = document.getElementById(pause);
     x.innerHTML = finaltag;
     return innertext3;
   }
+
   function newFunction(link) {
     document.body.appendChild(link);
     link.click();
@@ -283,25 +302,17 @@ export default function App() {
   var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
   var startAftertag = '</speak>';
   var startAftertagfe = ssml12;
-
-  var allssml = ssml3 + ssml2;
-  console.log("allssml", allssml)
+  if (ssml12 !== undefined)
+    var textdata = closetagBefore + ssml12 + startAftertag;
+  else
+    var textdata = closetagBefore + startAftertag;
   const handleClick1 = () => {
     setOpen1(!open1);
   };
-  if (ssml2.length < 1) {
-    var textdata = closetagBefore + startAftertagfe + startAftertag;
-  } else if (ssml2.length < 1) {
-    var textdata = closetagBefore + ssml2 + startAftertag;
-  } else if (ssml3.length < 1) {
-    var textdata = closetagBefore + ssml3 + startAftertag;
-  }
- 
-  else {
-    var textdata = closetagBefore + allssml + startAftertag;
-  }
   // ################################## Voice List  ########################## 
   useEffect(() => {
+
+
     fetch(
       "https://canadacentral.tts.speech.microsoft.com/cognitiveservices/voices/list",
       {
@@ -314,7 +325,7 @@ export default function App() {
       .then((response) => response.json())
       .then((data) => {
         SetUser(data);
-        console.log("mydata", Userstype);
+        console.log("mydata", data);
       })
       .catch((err) => {
         console.log("myerr", err);
@@ -353,6 +364,7 @@ export default function App() {
     console.log("demo.StyleName", data.StyleList)
     setDisplaystyle(data ? data.StyleList : 0);
     setDisplayName1(data.DisplayName);
+
     setGender1(data.Gender)
     setLocalName1(data.LocalName)
     setLocaleName1(data.LocaleName)
@@ -365,17 +377,19 @@ export default function App() {
   const result = [];
   const map = new Map();
   for (const item of array) {
-    if (!map.has(item.LocaleName)) {
-      map.set(item.LocaleName, true);
+    if (!map.has(item.Locale)) {
+      map.set(item.Locale, true);
       result.push({
         LocaleName: item.LocaleName,
-        StyleName: item.StyleList
+        StyleName: item.StyleList,
+        Locale: item.Locale
       })
     }
   }
   const handleChange9 = (event) => {
     setAge(event.target.value);
   };
+
 
   return (
     <Container fluid>
@@ -421,13 +435,11 @@ export default function App() {
                   <Dropdown.Toggle id="dropdown-basic" className="save">
                     <i className="fa fa-file-o"></i> New Recording
                   </Dropdown.Toggle>
-
                   <Dropdown.Menu>
                     <Dropdown.Item href="#/action-1" onClick={handleClickOpen}><i class="fa fa-file-text-o"></i> New text file</Dropdown.Item>
                     <Dropdown.Item href="#/action-2">
                       <i class="fa fa-file-excel-o" ></i> New lexicon file
                     </Dropdown.Item>
-
                   </Dropdown.Menu>
                 </Dropdown>
               </Col>
@@ -470,19 +482,31 @@ export default function App() {
                   <span class="sr-only">Loading...</span>
                 </div>
               ) : <button className="btn btnplay" onClick={playsound}></button>
-
           }
           <AudioPlayer
             src={Wave} controls />
           <br></br>
-          <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text"></div>
-          <TextareaAutosize
-            aria-label="empty textarea"
-            className={ssmlEditer}
-            placeholder="Empty"
-            onChange={(e) => setinput(e.target.value)} value={textdata}
-            style={{ width: '100%', height: 500 }}
-          />
+
+          <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text"><div></div></div>
+          {
+            Userstype == "" || Userstype == "undefined" ? (
+              <TextareaAutosize
+                aria-label="empty textarea"
+                className={ssmlEditer}
+                placeholder="Empty"
+                onChange={(e) => setinput(e.target.value)} value={textdata}
+                style={{ width: '100%', height: 500 }}
+              />
+
+            ) :
+              <TextareaAutosize
+                aria-label="empty textarea"
+                className={ssmlEditer}
+                placeholder="Empty"
+                onChange={(e) => setinput(e.target.value)} value={textdata}
+                style={{ width: '100%', height: 500 }}
+              />
+          }
         </Col>
         <Col xs={12} md={3} className="border-round">
           <List
@@ -526,19 +550,22 @@ export default function App() {
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon className="language">
                     <div className=" list">
-                      {result.map((items) => (
-                        <a
-                          onClick={() => saveUser(items)}
-                          class="dropdown-item"
-                          href="#"
-                          key={items.id}
-                        >
-                          <span className="product_list">
-                            {" "}
-                            {items.LocaleName}{" "}
-                          </span>{" "}
-                        </a>
-                      ))}
+                      {
+                        result.map((items) => {
+                          if (items.Locale == 'en-US' || items.Locale == 'en-CA' || items.Locale == 'fr-FR' || items.Locale == 'fr-CA') {
+                            return <a
+                              onClick={() => saveUser(items)}
+                              class="dropdown-item"
+                              href="#"
+                              key={items.id}
+                            >
+                              <span className="product_list">
+                                {" "}
+                                {items.LocaleName}{" "}
+                              </span>{" "}
+                            </a>
+                          }
+                        })}
                     </div>
                   </ListItemIcon>
                   <ListItemText />
@@ -592,7 +619,6 @@ export default function App() {
                     }
                     {Displaystyle ? (
                       <span>
-
                         <select class="form-select languagechoose" aria-label="Default select example">
                           <option selected>Speaking Style | Default</option>
                           {
@@ -609,7 +635,7 @@ export default function App() {
                 </Col>
               </List>
             </Collapse>
-            <ListItemButton onClick={handleClick2}>
+            {/* <ListItemButton onClick={handleClick2}>
               <ListItemIcon>
                 {open2 ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
@@ -620,13 +646,12 @@ export default function App() {
               <List component="div" disablePadding>
                 <ReadingRules />
               </List>
-            </Collapse>
+            </Collapse> */}
             <ListItemButton onClick={handleClick3}>
               <ListItemIcon>
                 {open3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
               <ListItemText primary="Rate" />
-
               <i className="fa fa-eraser" aria-hidden="true"></i>
             </ListItemButton>
             <Collapse in={open3} timeout="auto" unmountOnExit>
@@ -688,7 +713,6 @@ export default function App() {
                           onBlur={handleBlur1}
                           inputProps={{
                             step: 10,
-
                             type: "number",
                             "aria-labelledby": "input-slider",
                           }
