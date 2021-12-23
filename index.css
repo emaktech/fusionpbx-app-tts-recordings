@@ -43,10 +43,7 @@ code {
   text-decoration: none;
   background-color: rgb(255 254 254 / 4%)!important;
 }
-.list{
-  height: 154px;
-  overflow-y: scroll;
-}
+
 
 .dropdown-item {
 
