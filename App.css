@@ -112,6 +112,8 @@ hr:not([size]) {
   height: 500px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  padding: 30px 0px;
+  overflow-y: scroll;
 }
 
 .rate{
@@ -230,11 +232,39 @@ div#textid {
   font-weight:600;
 }
 
-span.voiceclass:before {
+voice.voiceclass:before {
   content: attr(data-content);
   font-size: .75rem;
   font-weight: bold;
  
+}
+div#textid div voice {
+  padding-left: 40px;
+}
+
+div#textid div {
+  padding: 28px 10px;
+}
+.text-node{
+  color: #000;
+}
+
+span.voiceclass:before {
+  content: attr(data-content);
+}
+.voiceclass span:before {
+  content: attr(data-content);
+  color:#0376d2;
+  font-weight:600;
+  padding: 0px 10px;
+  font-size: 14px;
+}
+.voiceclass .text-node::after {
+  content: attr(last-data);
+  color:#0376d2;
+  font-weight:600;
+  padding: 0px 10px;
+  font-size: 14px;
 }
 div#textid div span {
   padding-left: 17px;
@@ -242,4 +272,7 @@ div#textid div span {
 
 div#textid div {
   padding-left: 9px;
+}
+s{
+  text-decoration-line: none !important;
 }

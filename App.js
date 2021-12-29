@@ -1,4 +1,4 @@
-import React, { component, link } from "react";
+import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -16,7 +16,6 @@ import Collapse from "@mui/material/Collapse";
 import { useState, useEffect } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
 import Checkbox from "@mui/material/Checkbox";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -25,29 +24,20 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import "./App.css";
-import ReadingRules from "./components/ReadingRules";
 import Slider from "@mui/material/Slider";
 import MuiInput from "@mui/material/Input";
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AudioPlayer from "react-h5-audio-player";
 import 'react-h5-audio-player/lib/styles.css';
-
-
-
 export default function App() {
-
   const [checked, setChecked] = React.useState(false);
-  const [showResults, setShowResults] = React.useState(true)
-  const [open, setOpen] = React.useState(true);
   const [open1, setOpen1] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
   const [open4, setOpen4] = React.useState(false);
   const [open5, setOpen5] = React.useState(false);
   const [User, SetUser] = useState([]);
   const [Userstype, SetUserstype] = useState([]);
   const [ssml12, setssml12] = useState();
-  const [ssml1, setssml1] = useState();
   const [ssml2, setssml2] = useState([]);
   const [Gender1, setGender1] = useState('');
   const [LocalName1, setLocalName1] = useState('');
@@ -67,12 +57,12 @@ export default function App() {
   const [value, setValue] = React.useState(30);
   const [value1, setValue1] = React.useState(20);
   const handleSliderChange = (event, newValue) => { setValue(newValue) };
-  const [age, setAge] = React.useState('age');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [Speaking, setSpeaking] = useState('');
   const Input = MuiInput;
+
   const [divEditer, setdivEditer] = useState("opan");
   const [ssmlEditer, setssmlEditer] = useState("hidden");
-  const onClick = () => setShowResults(true)
   const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
   };
@@ -89,57 +79,159 @@ export default function App() {
   const handleBlur1 = () => {
     if (value1 < 0) {
       setValue1(0);
+
     } else if (value1 > 200) {
       setValue1(200);
     }
   };
-
-// enter event handler
-
-const handleContentEditable = (e) => {
-
-  if (e.key == 'Enter') {
-
-    var docFragment = document.createDocumentFragment(); 
-    //add a new line    
-    //var newEle = document.createTextNode('<div><span>[ABUJ]</span></div>');   
-     //docFragment.appendChild(newEle); 
-       //add the br, or p, or something else    
-       var newEle = document.createElement('div');  
-       newEle.innerHTML = "<span class='voiceclass' data-content='[GUY]'><span class='text-node'><br/></span></span>"; 
-        docFragment.appendChild(newEle);
-       // docFragment.parentNode.appendChild(newEle);
-       console.log("e.key",newEle)
-         //make the br replace selection    
-         var range = window.getSelection().getRangeAt(0); 
-            range.deleteContents();   
-             //range.insertNode(docFragment); 
-
-             //var parentEl = range.commonAncestorContainer;
-             //if (parentEl.nodeType != 1) {
-             // range.commonAncestorContainer.parentNode.after(docFragment);
-            // }
-            // else{
-             // range.commonAncestorContainer.after(docFragment);
-             //}
-
-             document.getElementById("textid").appendChild(docFragment);
-
-             
-                //create a new range    
-                range = document.createRange();    range.setStartAfter(newEle);    range.collapse(true);    
-                //make the cursor there    
-                var sel = window.getSelection();    sel.removeAllRanges();    sel.addRange(range);  
-                e.preventDefault();  
-                return false;
+  var _onPaste_StripFormatting_IEPaste = false;
+  const handleContentEditableChangeBlur = (e) => {
+    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+      e.preventDefault();
+      var text = e.originalEvent.clipboardData.getData('text/plain');
+      window.document.execCommand('insertText', false, text);
   }
-}
+  else if (e.clipboardData && e.clipboardData.getData) {
+      e.preventDefault();
+      var text = e.clipboardData.getData('text/plain');
+      window.document.execCommand('insertText', false, text);
+  }
+  else if (window.clipboardData && window.clipboardData.getData) {
+      // Stop stack overflow
+      if (!_onPaste_StripFormatting_IEPaste) {
+          _onPaste_StripFormatting_IEPaste = true;
+          e.preventDefault();
+          window.document.execCommand('ms-pasteTextOnly', false);
+      }
+      _onPaste_StripFormatting_IEPaste = false;
+  }
+  }
+  // enter event handler
+  const handleContentEditableChange = (e) => {
+ 
+    if (e.keyCode == "8") {
+      if (document.getElementById("textid").querySelectorAll('div').length < 2) {
+        if (document.getElementById("textid").querySelectorAll('span')[0].innerHTML == "<br>") {
+          e.preventDefault();
+          return false;
+        }
+        else if (document.getElementById("textid").querySelectorAll('span')[0].innerHTML.length < 2) {
+          document.getElementById("textid").querySelectorAll('span')[0].innerHTML = "<br>";
+          e.preventDefault();
+          return false;
+        }
+       }
+
+       if(document.getElementById("textid").querySelectorAll('div').length == 2){
+
+        if(document.getElementById("textid").querySelectorAll('div')[1].innerHTML == "<br>" || document.getElementById("textid").querySelectorAll('div')[1].children[0].children[0].innerHTML == "<br>"){
+         document.getElementById("textid").querySelectorAll('div')[1].remove();
+         e.preventDefault();
+         return false;
+        }
+
+      }
+    }
+  }
+  const handleContentEditable = (e) => {
+    if (e.key === 'Enter') { // 8 is backspace
+      var docFragment = document.createDocumentFragment();
+
+      var newEle = document.createElement('div');
+      newEle.innerHTML = "<voice class='voiceclass' data-content='' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+      docFragment.appendChild(newEle);
+      var range = window.getSelection().getRangeAt(0);
+
+      range.deleteContents();
+      document.getElementById("textid").appendChild(docFragment);
+      range = document.createRange(); range.setStartAfter(newEle); range.collapse(true);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+
+      e.preventDefault();
+      return false;
+    }
+    let div_length = document.getElementById("textid").querySelectorAll('div').length;
+    if (div_length > 1) {
+      let length1 = div_length - 1;
+      let length2 = div_length - 2;
+      if(document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue){
+        let val1 = document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue;
+         
+        if (val1 == ""){
+        document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+      }
+      else{
+
+         try{
+
+          if(typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined'){
+            document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+          }
+          else{
+         if(document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == ""){
+            document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
+         }
+         if(document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>"){
+
+          document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+         }
+        }
+
+        }
+
+        catch(e) {  }  
+      }
+        
+      }
+      
+      if(document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue =="" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML =="<br>")){
+        document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+      }
+
+     // for check empty node
+     try{
+     if(window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == ""){
+      window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value = "[JennyMultilingualNeural]";
+     }
+     }
+     catch(error) { 
+             console.log(error);
+      }
+
+    }
+  }
+
   // ################################## Ssml to Voice  ########################## 
   const playsound = (event) => {
- 
+    if (name == '' || name == 'undefined' && name == 'null') {
+      var name = document.getElementById('stylespeaking').value;
+    }
+    var innertext21 = document.getElementById('textid').innerHTML;
+    var str = innertext21;
+    str = str.replaceAll('<span class="text-node">', '');
+    str = str.replaceAll('</span>', '');
+    str = str.replaceAll('<div id="voicessml">', '');
+    str = str.replaceAll('</div>', '');
+    str = str.replaceAll('<div id="voicessml">', '');
+    str = str.replaceAll('<br>', '');
+    str = str.replaceAll('class="voiceclass"', '');
+    str = str.replaceAll('[', '');
+    str = str.replaceAll(']', '');
+    str = str.replaceAll(']', '');
+    str = str.replaceAll('<span class="Pauseclass">', '');
+    str = str.replace('<s>', '<s/>');
+    str = str.replace('<s></s></s>', '<s/>');
+    str = str.replaceAll('&nbsp;', ' ');
+    str = str.replaceAll(`<span data-content="${name}" last-data="</>" class="text-node">`, ``);
+    str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
+    console.log(str);
+    setwithoutbrak(str)
     let date = textdata
-   
+    console.log("date",date)
     setIsLoaded(true);
+    if(date == 'undefined'){
+      alert("hii i am boy")
+    }
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
@@ -149,7 +241,6 @@ const handleContentEditable = (e) => {
       }, body: date
     })
       .then((response) => response.blob())
-
       .then((blob) => {
         setWave(blob)
         setIsLoaded(false);
@@ -157,16 +248,35 @@ const handleContentEditable = (e) => {
         var url = window.URL.createObjectURL(blob);
         console.log('MP3 URl: ', url);
         setWave(url)
-
       })
       .catch(() => {
-       
       })
   };
   const handleChange = (event) => {
-   
-
-
+    if (name == '' || name == 'undefined' && name == 'null') {
+      var name = document.getElementById('stylespeaking').value;
+    }
+    var innertext21 = document.getElementById('textid').innerHTML;
+    var str = innertext21;
+    str = str.replaceAll('<span class="text-node">', '');
+    str = str.replaceAll('</span>', '');
+    str = str.replaceAll('<div id="voicessml">', '');
+    str = str.replaceAll('</div>', '');
+    str = str.replaceAll('<div id="voicessml">', '');
+    str = str.replaceAll('<br>', '');
+    str = str.replaceAll('class="voiceclass"', '');
+    str = str.replaceAll('[', '');
+    str = str.replaceAll(']', '');
+    str = str.replaceAll(']', '');
+    str = str.replaceAll('<span class="Pauseclass">', '');
+    str = str.replace('<s>', '<s/>');
+    str = str.replace('<s></s></s>', '<s/>');
+    str = str.replaceAll('&nbsp;', ' ');
+    str = str.replaceAll(`<span data-content="${name}" last-data="</>" class="text-node">`, ``);
+    str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
+    // str= str.replace(/<[^>]*>?/gm,"");
+    console.log(str);
+    setwithoutbrak(str)
     if (event.target.checked) {
       setdivEditer("hidden");
       setssmlEditer("opan")
@@ -176,22 +286,12 @@ const handleContentEditable = (e) => {
       setssmlEditer("hidden")
     }
     setChecked(event.target.checked)
-
-  };
-  const handleClick = () => {
-    setOpen(!open);
-  };
-  const handleClick2 = () => {
-    setOpen2(!open2);
   };
   const handleClick3 = () => {
     setOpen3(!open3);
   };
   const handleClick4 = () => {
     setOpen4(!open4);
-  };
-  const sendUser = (items) => {
-    console.log("items", items);
   };
   const handleClickOpen = () => {
     setOpen5(true);
@@ -201,40 +301,22 @@ const handleContentEditable = (e) => {
   };
   // ##################################   Voice  ########################## 
   const Voice = (event) => {
+    var name = document.getElementById('stylespeaking').value;
+    console.log("namedata",name)
     var name = event.currentTarget.children[1].dataset.name;
     var gender = event.currentTarget.children[1].dataset.gender;
     var lang = event.currentTarget.children[1].dataset.lang;
-    var short = event.currentTarget.children[1].dataset.short;
-     debugger;
-    var sel = window.getSelection(); 
-    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "["+name+"]");
-    var tag_seltxt = addVoice('voice', 'textid', name, short, lang, gender);
+    var short = event.currentTarget.children[1].dataset.short;  
+ 
+    var sel = window.getSelection();
+    console.log("sel", sel)
+   
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
+
   };
-  function addVoice(tag, Voice, tagVal, shortvl, prevProps, prevState) {
-    var innertext1 = document.getElementById(Voice).innerHTML;
-    var firstpart;
-    var secondpart;
-    var secondpart3;
-    var thirdpart;
-    var finaltag;
-    var selectpart = window.getSelection().toString();
-    if (selectpart.length < 1) {
-      return false;
-    }
-    var explode = innertext1.split(selectpart);
-    firstpart = explode[0];
-    if (typeof explode[1] != "undefined")
-      thirdpart = explode[1];
-    else
-      thirdpart = "";
-    secondpart3 = '<voice xml:lang="en-US" xml:gender="Male" name="' + shortvl + '">' + selectpart + '</voice>';
-    if (ssml12 != "" && ssml12 != undefined)
-      secondpart3 = ssml12 + secondpart3;
 
-    setssml12(secondpart3)
-    
-
-  }
   // ##################################   Rate  ########################## 
   const Rate = (event) => {
     var name = event.currentTarget.innerText;
@@ -265,9 +347,7 @@ const handleContentEditable = (e) => {
     finaltag = firstpart + secondpart + thirdpart;
     var x = document.getElementById(rate);
     x.innerHTML = finaltag;
-
     return innertext2;
-
   }
   // ##################################  Pause  ########################## 
   const Pause = (event) => {
@@ -300,28 +380,17 @@ const handleContentEditable = (e) => {
     finaltag = firstpart + secondpart + thirdpart;
     var x = document.getElementById(pause);
     x.innerHTML = finaltag;
-
     return innertext3;
-  }
-
-
-  function generateCustomSSML() {
-    return "test111";
-  }
-
-  function newFunction(link) {
-    document.body.appendChild(link);
-    link.click();
   }
   // ##################################  ssml Convert  ########################## 
   var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
   var startAftertag = '</speak>';
-  var startAftertagfe = ssml12;
-   
-  if(ssml12 !== undefined)
-    var textdata = closetagBefore+ssml12+ startAftertag;
-    else
-    var textdata = closetagBefore+ startAftertag;
+  var startAftertagfe = withoutbrak;
+  if (withoutbrak !== undefined)
+    var textdata = closetagBefore + startAftertagfe + startAftertag;
+  else if(ssml2 !== undefined){
+    var textdata = closetagBefore + startAftertagfe
+  }
 
   const handleClick1 = () => {
     setOpen1(!open1);
@@ -337,6 +406,7 @@ const handleContentEditable = (e) => {
           "cache-control": "no-cache",
         }
       })
+
       .then((response) => response.json())
       .then((data) => {
         SetUser(data);
@@ -401,9 +471,44 @@ const handleContentEditable = (e) => {
       })
     }
   }
-  const handleChange9 = (event) => {
-    setAge(event.target.value);
-  };
+ 
+  const Speakingstyle = (e) => {
+    var name = document.getElementById('stylespeaking').value;
+    console.log("name", name)
+
+    var tag_seltxtstyle = addstyle('mstts', 'textid', name);
+    console.log("tag_seltxt123", tag_seltxtstyle)
+    var sel = window.getSelection();
+    console.log("sel", sel)
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
+   }
+  function addstyle(tag, rate, name) {
+    var closetagBeforespeaklast = '</>';
+    var innertext2 = document.getElementById(rate).innerHTML;
+    var firstpart;
+    var secondpart;
+    var secondpart2;
+    var thirdpart;
+    var finaltag;
+    var selectpart = window.getSelection().toString();
+    console.log("selectpart", selectpart)
+    if (selectpart.length < 1) {
+      return false;
+    }
+    debugger
+    var explode = innertext2.split(selectpart);
+    firstpart = explode[0];
+    if (typeof explode[1] != "undefined")
+      thirdpart = explode[1];
+    else
+      thirdpart = "";
+      secondpart = '<s/><mstts:express-as style="' + name + '"><span class="Pauseclass">[' + name + ']</span>' + selectpart + '</mstts:express-as><s/>';
+      setssml2(secondpart)
+    console.log("secondpart2", secondpart)
+    finaltag = firstpart + secondpart + thirdpart;
+
+  }
 
   return (
     <Container fluid>
@@ -449,13 +554,11 @@ const handleContentEditable = (e) => {
                   <Dropdown.Toggle id="dropdown-basic" className="save">
                     <i className="fa fa-file-o"></i> New Recording
                   </Dropdown.Toggle>
-
                   <Dropdown.Menu>
                     <Dropdown.Item href="#/action-1" onClick={handleClickOpen}><i class="fa fa-file-text-o"></i> New text file</Dropdown.Item>
                     <Dropdown.Item href="#/action-2">
                       <i class="fa fa-file-excel-o" ></i> New lexicon file
                     </Dropdown.Item>
-
                   </Dropdown.Menu>
                 </Dropdown>
               </Col>
@@ -464,7 +567,6 @@ const handleContentEditable = (e) => {
                   <Dropdown.Toggle id="dropdown-basic" className="save">
                     <i className="fa fa-floppy-o"></i> Save
                   </Dropdown.Toggle>
-
                   <Dropdown.Menu>
                     <Dropdown.Item href="#/action-1"><i class="fa fa-file-audio-o" ></i> Save as</Dropdown.Item>
                   </Dropdown.Menu>
@@ -498,34 +600,35 @@ const handleContentEditable = (e) => {
                   <span class="sr-only">Loading...</span>
                 </div>
               ) : <button className="btn btnplay" onClick={playsound}></button>
-
           }
           <AudioPlayer
             src={Wave} controls />
           <br></br>
-
-          <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text" onKeyPress={handleContentEditable}><div ><span class='voiceclass' data-content='[GUY]'><span class="text-node"><br/></span></span></div></div>
+          <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text" onKeyPress={handleContentEditable} onKeyDown={handleContentEditableChange} onPaste={handleContentEditableChangeBlur}>
+            <div id="voicessml">
+              <voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'>
+                <span data-content=''last-data='' class="text-node"><br /></span>
+              </voice>
+            </div>
+          </div>
           {
-            Userstype=="" || Userstype=="undefined" ?(
+            Userstype == "" || Userstype == "undefined" ? (
               <TextareaAutosize
-              aria-label="empty textarea"
-              className={ssmlEditer}
-              placeholder="Empty"
-              onChange={(e) => setinput(e.target.value)} value={textdata}
-              style={{ width: '100%', height: 500 }}
-            />
-        
-            ):
-            <TextareaAutosize
-            aria-label="empty textarea"
-            className={ssmlEditer}
-            placeholder="Empty"
-            onChange={(e) => setinput(e.target.value)} value={Userstype}
-            style={{ width: '100%', height: 500 }}
-          />
+                aria-label="empty textarea"
+                className={ssmlEditer}
+                placeholder="Empty"
+                onChange={(e) => setinput(e.target.value)} value={textdata}
+                style={{ width: '100%', height: 500 }}
+              />
+            ) :
+              <TextareaAutosize
+                aria-label="empty textarea"
+                className={ssmlEditer}
+                placeholder="Empty"
+                onChange={(e) => setinput(e.target.value)} value={textdata}
+                style={{ width: '100%', height: 500 }}
+              />
           }
-          
-
         </Col>
         <Col xs={12} md={3} className="border-round">
           <List
@@ -544,7 +647,6 @@ const handleContentEditable = (e) => {
                 {open ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
               <ListItemText primary="Recent" />
-
               <i className="fa fa-pencil" aria-hidden="true"></i>
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -570,9 +672,7 @@ const handleContentEditable = (e) => {
                   <ListItemIcon className="language">
                     <div className=" list">
                       {
-
                         result.map((items) => {
-
                           if (items.Locale == 'en-US' || items.Locale == 'en-CA' || items.Locale == 'fr-FR' || items.Locale == 'fr-CA' && items.VoiceType == 'Neural') {
                             return <a
                               onClick={() => saveUser(items)}
@@ -586,12 +686,9 @@ const handleContentEditable = (e) => {
                               </span>{" "}
                             </a>
                           }
-
                         }
-
                         )
                       }
-
                     </div>
                   </ListItemIcon>
                   <ListItemText />
@@ -620,7 +717,7 @@ const handleContentEditable = (e) => {
                                     <i class="fa fa-female" aria-hidden="true"></i>
                                 }
                               />
-                              <span className="text" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Locale} data-lang={data.DisplayName}>{data.DisplayName}</span>
+                              <span className="text" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Gender} data-lang={data.DisplayName}>{data.DisplayName}</span>
                             </span>
                           ) : null
                         ))
@@ -645,12 +742,11 @@ const handleContentEditable = (e) => {
                     }
                     {Displaystyle ? (
                       <span>
-
-                        <select class="form-select languagechoose" aria-label="Default select example">
-                          <option selected>Speaking Style | Default</option>
+                        <select class="form-select languagechoose" id="stylespeaking" aria-label="Default select example" onChange={Speakingstyle}>
+                          <option selected >Speaking Style | Default</option>
                           {
                             Displaystyle.map((data) => (
-                              <option value="1">{data}</option>
+                              <option value={data}>{data}</option>
                             )
                             )
                           }
@@ -662,18 +758,6 @@ const handleContentEditable = (e) => {
                 </Col>
               </List>
             </Collapse>
-            {/* <ListItemButton onClick={handleClick2}>
-              <ListItemIcon>
-                {open2 ? <ExpandLess /> : <ExpandMore />}
-              </ListItemIcon>
-              <ListItemText primary="Break" />
-              <i className="fa fa-eraser" aria-hidden="true"></i>
-            </ListItemButton>
-            <Collapse in={open2} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ReadingRules />
-              </List>
-            </Collapse> */}
             <ListItemButton onClick={handleClick3}>
               <ListItemIcon>
                 {open3 ? <ExpandLess /> : <ExpandMore />}
@@ -724,7 +808,6 @@ const handleContentEditable = (e) => {
                 {open4 ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
               <ListItemText primary="Pause" />
-
               <i className="fa fa-eraser" aria-hidden="true"></i>
             </ListItemButton>
             <Collapse in={open4} timeout="auto" unmountOnExit>
@@ -740,7 +823,6 @@ const handleContentEditable = (e) => {
                           onBlur={handleBlur1}
                           inputProps={{
                             step: 10,
-
                             type: "number",
                             "aria-labelledby": "input-slider",
                           }
