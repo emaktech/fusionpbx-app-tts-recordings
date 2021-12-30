@@ -90,25 +90,25 @@ export default function App() {
       e.preventDefault();
       var text = e.originalEvent.clipboardData.getData('text/plain');
       window.document.execCommand('insertText', false, text);
-  }
-  else if (e.clipboardData && e.clipboardData.getData) {
+    }
+    else if (e.clipboardData && e.clipboardData.getData) {
       e.preventDefault();
       var text = e.clipboardData.getData('text/plain');
       window.document.execCommand('insertText', false, text);
-  }
-  else if (window.clipboardData && window.clipboardData.getData) {
+    }
+    else if (window.clipboardData && window.clipboardData.getData) {
       // Stop stack overflow
       if (!_onPaste_StripFormatting_IEPaste) {
-          _onPaste_StripFormatting_IEPaste = true;
-          e.preventDefault();
-          window.document.execCommand('ms-pasteTextOnly', false);
+        _onPaste_StripFormatting_IEPaste = true;
+        e.preventDefault();
+        window.document.execCommand('ms-pasteTextOnly', false);
       }
       _onPaste_StripFormatting_IEPaste = false;
-  }
+    }
   }
   // enter event handler
   const handleContentEditableChange = (e) => {
- 
+
     if (e.keyCode == "8") {
       if (document.getElementById("textid").querySelectorAll('div').length < 2) {
         if (document.getElementById("textid").querySelectorAll('span')[0].innerHTML == "<br>") {
@@ -120,14 +120,14 @@ export default function App() {
           e.preventDefault();
           return false;
         }
-       }
+      }
 
-       if(document.getElementById("textid").querySelectorAll('div').length == 2){
+      if (document.getElementById("textid").querySelectorAll('div').length == 2) {
 
-        if(document.getElementById("textid").querySelectorAll('div')[1].innerHTML == "<br>" || document.getElementById("textid").querySelectorAll('div')[1].children[0].children[0].innerHTML == "<br>"){
-         document.getElementById("textid").querySelectorAll('div')[1].remove();
-         e.preventDefault();
-         return false;
+        if (document.getElementById("textid").querySelectorAll('div')[1].innerHTML == "<br>" || document.getElementById("textid").querySelectorAll('div')[1].children[0].children[0].innerHTML == "<br>") {
+          document.getElementById("textid").querySelectorAll('div')[1].remove();
+          e.preventDefault();
+          return false;
         }
 
       }
@@ -154,48 +154,48 @@ export default function App() {
     if (div_length > 1) {
       let length1 = div_length - 1;
       let length2 = div_length - 2;
-      if(document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue){
+      if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue) {
         let val1 = document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue;
-         
-        if (val1 == ""){
-        document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
-      }
-      else{
 
-         try{
-
-          if(typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined'){
-            document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
-          }
-          else{
-         if(document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == ""){
-            document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
-         }
-         if(document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>"){
-
+        if (val1 == "") {
           document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
-         }
+        }
+        else {
+
+          try {
+
+            if (typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined') {
+              document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+            }
+            else {
+              if (document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == "") {
+                document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
+              }
+              if (document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>") {
+
+                document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
+              }
+            }
+
+          }
+
+          catch (e) { }
         }
 
-        }
+      }
 
-        catch(e) {  }  
-      }
-        
-      }
-      
-      if(document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue =="" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML =="<br>")){
+      if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue == "" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML == "<br>")) {
         document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><br/></span></voice>";
       }
 
-     // for check empty node
-     try{
-     if(window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == ""){
-      window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value = "[JennyMultilingualNeural]";
-     }
-     }
-     catch(error) { 
-             console.log(error);
+      // for check empty node
+      try {
+        if (window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == "") {
+          window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value = "[JennyMultilingualNeural]";
+        }
+      }
+      catch (error) {
+        console.log(error);
       }
 
     }
@@ -212,6 +212,7 @@ export default function App() {
     str = str.replaceAll('</span>', '');
     str = str.replaceAll('<div id="voicessml">', '');
     str = str.replaceAll('</div>', '');
+    str = str.replaceAll('<div>', '');
     str = str.replaceAll('<div id="voicessml">', '');
     str = str.replaceAll('<br>', '');
     str = str.replaceAll('class="voiceclass"', '');
@@ -219,25 +220,27 @@ export default function App() {
     str = str.replaceAll(']', '');
     str = str.replaceAll(']', '');
     str = str.replaceAll('<span class="Pauseclass">', '');
-    str = str.replace('<s>', '<s/>');
-    str = str.replace('<s></s></s>', '<s/>');
+    str = str.replaceAll('<s>', '<s/>');
+    str = str.replaceAll('<s></s></s>', '<s/>');
     str = str.replaceAll('&nbsp;', ' ');
     str = str.replaceAll(`<span data-content="${name}" last-data="</>" class="text-node">`, ``);
     str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
-    console.log(str);
-    setwithoutbrak(str)
+    console.log("dbcsdjhvjdshb", str);
+    var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
+    var startAftertag = '</speak>';
+    var startAftertagfe = str;
+    var textdata = closetagBefore + startAftertagfe + startAftertag;
     let date = textdata
     console.log("date",date)
     setIsLoaded(true);
-    if(date == 'undefined'){
-      alert("hii i am boy")
-    }
+
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
         'Ocp-Apim-Subscription-Key': '3751687d3f494502a2b7af3f62f675dc',
         'X-Microsoft-OutputFormat': 'audio-24khz-96kbitrate-mono-mp3',
         'Content-Type': 'application/ssml+xml',
+      
       }, body: date
     })
       .then((response) => response.blob())
@@ -262,6 +265,7 @@ export default function App() {
     str = str.replaceAll('</span>', '');
     str = str.replaceAll('<div id="voicessml">', '');
     str = str.replaceAll('</div>', '');
+    str = str.replaceAll('<div>', '');
     str = str.replaceAll('<div id="voicessml">', '');
     str = str.replaceAll('<br>', '');
     str = str.replaceAll('class="voiceclass"', '');
@@ -269,14 +273,18 @@ export default function App() {
     str = str.replaceAll(']', '');
     str = str.replaceAll(']', '');
     str = str.replaceAll('<span class="Pauseclass">', '');
-    str = str.replace('<s>', '<s/>');
-    str = str.replace('<s></s></s>', '<s/>');
+    str = str.replaceAll('<s>', '<s/>');
+    str = str.replaceAll('<s></s></s>', '<s/>');
     str = str.replaceAll('&nbsp;', ' ');
     str = str.replaceAll(`<span data-content="${name}" last-data="</>" class="text-node">`, ``);
     str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
-    // str= str.replace(/<[^>]*>?/gm,"");
+    // ##################################  ssml Convert  ########################## 
+    var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
+    var startAftertag = '</speak>';
+    var startAftertagfe = str;
+    var textdata = closetagBefore + startAftertagfe + startAftertag;
     console.log(str);
-    setwithoutbrak(str)
+    setwithoutbrak(textdata)
     if (event.target.checked) {
       setdivEditer("hidden");
       setssmlEditer("opan")
@@ -302,15 +310,13 @@ export default function App() {
   // ##################################   Voice  ########################## 
   const Voice = (event) => {
     var name = document.getElementById('stylespeaking').value;
-    console.log("namedata",name)
+    console.log("namedata", name)
     var name = event.currentTarget.children[1].dataset.name;
     var gender = event.currentTarget.children[1].dataset.gender;
     var lang = event.currentTarget.children[1].dataset.lang;
-    var short = event.currentTarget.children[1].dataset.short;  
- 
+    var short = event.currentTarget.children[1].dataset.short;
     var sel = window.getSelection();
     console.log("sel", sel)
-   
     sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
     sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
     sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
@@ -383,14 +389,14 @@ export default function App() {
     return innertext3;
   }
   // ##################################  ssml Convert  ########################## 
-  var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
-  var startAftertag = '</speak>';
-  var startAftertagfe = withoutbrak;
-  if (withoutbrak !== undefined)
-    var textdata = closetagBefore + startAftertagfe + startAftertag;
-  else if(ssml2 !== undefined){
-    var textdata = closetagBefore + startAftertagfe
-  }
+  // var closetagBefore = '<speak version="1.0" xml:lang="en-US">';
+  // var startAftertag = '</speak>';
+  // var startAftertagfe = withoutbrak;
+  // if (withoutbrak !== undefined)
+  //   var textdata = closetagBefore + startAftertagfe + startAftertag;
+  // else if(ssml2 !== undefined){
+  //   var textdata = closetagBefore + startAftertagfe
+  // }
 
   const handleClick1 = () => {
     setOpen1(!open1);
@@ -471,7 +477,7 @@ export default function App() {
       })
     }
   }
- 
+
   const Speakingstyle = (e) => {
     var name = document.getElementById('stylespeaking').value;
     console.log("name", name)
@@ -482,7 +488,7 @@ export default function App() {
     console.log("sel", sel)
     sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
     sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
-   }
+  }
   function addstyle(tag, rate, name) {
     var closetagBeforespeaklast = '</>';
     var innertext2 = document.getElementById(rate).innerHTML;
@@ -503,8 +509,8 @@ export default function App() {
       thirdpart = explode[1];
     else
       thirdpart = "";
-      secondpart = '<s/><mstts:express-as style="' + name + '"><span class="Pauseclass">[' + name + ']</span>' + selectpart + '</mstts:express-as><s/>';
-      setssml2(secondpart)
+    secondpart = '<s/><mstts:express-as style="' + name + '"><span class="Pauseclass">[' + name + ']</span>' + selectpart + '</mstts:express-as><s/>';
+    setssml2(secondpart)
     console.log("secondpart2", secondpart)
     finaltag = firstpart + secondpart + thirdpart;
 
@@ -607,7 +613,7 @@ export default function App() {
           <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text" onKeyPress={handleContentEditable} onKeyDown={handleContentEditableChange} onPaste={handleContentEditableChangeBlur}>
             <div id="voicessml">
               <voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'>
-                <span data-content=''last-data='' class="text-node"><br /></span>
+                <span data-content='' last-data='' class="text-node"><br /></span>
               </voice>
             </div>
           </div>
@@ -617,7 +623,8 @@ export default function App() {
                 aria-label="empty textarea"
                 className={ssmlEditer}
                 placeholder="Empty"
-                onChange={(e) => setinput(e.target.value)} value={textdata}
+                onChange={(e) => setinput(e.target.value)}
+                 value={withoutbrak}
                 style={{ width: '100%', height: 500 }}
               />
             ) :
@@ -625,7 +632,8 @@ export default function App() {
                 aria-label="empty textarea"
                 className={ssmlEditer}
                 placeholder="Empty"
-                onChange={(e) => setinput(e.target.value)} value={textdata}
+                onChange={(e) => setinput(e.target.value)}
+                // value={textdata}
                 style={{ width: '100%', height: 500 }}
               />
           }
@@ -642,23 +650,6 @@ export default function App() {
               ></ListSubheader>
             }
           >
-            {/* <ListItemButton onClick={handleClick}>
-              <ListItemIcon>
-                {open ? <ExpandLess /> : <ExpandMore />}
-              </ListItemIcon>
-              <ListItemText primary="Recent" />
-              <i className="fa fa-pencil" aria-hidden="true"></i>
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <ListItemText primary="Starred" />
-                </ListItemButton>
-              </List>
-            </Collapse> */}
             <ListItemButton onClick={handleClick1}>
               <ListItemIcon>
                 {open1 ? <ExpandLess /> : <ExpandMore />}
