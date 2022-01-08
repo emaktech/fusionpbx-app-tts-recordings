@@ -256,22 +256,47 @@ span.voiceclass:before {
   content: attr(data-content);
   color:#0376d2;
   font-weight:600;
-  padding: 0px 10px;
+  padding: 0px 0px;
+  font-size: 14px;
+}
+.voiceclass break:before {
+  content: attr(time);
+  color:#0376d2;
+  font-weight:600;
+  padding: 0px 0px;
+  font-size: 14px;
+}
+.span prosody:after {
+  content: attr(back-data);
+  color:#0376d2;
+  font-weight:600;
+  padding: 0px 0px;
+  font-size: 14px;
+}
+.voiceclass prosody:after {
+  content: attr(back-data);
+  color:#0376d2;
+  font-weight:600;
+  padding: 0px 0px;
   font-size: 14px;
 }
 .voiceclass .text-node::after {
   content: attr(last-data);
   color:#0376d2;
   font-weight:600;
-  padding: 0px 10px;
+  padding: 0px 0px;
   font-size: 14px;
 }
-div#textid div span {
-  padding-left: 17px;
-}
 
+div#textid div span.text-node {
+  padding-left: 17px;
+  float: right;
+  width: 70%;
+  text-align: justify;
+}
 div#textid div {
   padding-left: 9px;
+  margin-bottom: 40px;
 }
 s{
   text-decoration-line: none !important;
