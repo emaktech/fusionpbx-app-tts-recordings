@@ -29,31 +29,23 @@ import MuiInput from "@mui/material/Input";
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AudioPlayer from "react-h5-audio-player";
 import 'react-h5-audio-player/lib/styles.css';
-import swal from 'sweetalert';
-
-
 export default function App() {
   const [checked, setChecked] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
   const [open4, setOpen4] = React.useState(false);
   const [open5, setOpen5] = React.useState(false);
-  const [open6, setOpen6] = React.useState(false);
-  const [open7, setOpen7] = React.useState(false);
   const [waveurl, setwaveurl] = useState('');
   const [Wavelist, SetWavelist] = useState([]);
   const [User, SetUser] = useState([]);
   const [FileName, setFileName] = useState([]);
-  const [recording_ssml, setrecording_ssml] = useState([])
   const [Gender1, setGender1] = useState('');
   const [LocalName1, setLocalName1] = useState('');
-  const [stylespeaking, setstylespeaking] = useState([]);
   const [DisplayName1, setDisplayName1] = useState('');
   const [LocaleName1, setLocaleName1] = useState('');
-  const [tts_recording_uuid, settts_recording_uuid] = useState('')
   const [input, setinput] = useState('');
   const [blobdata, setblobdata] = useState([]);
-  const [withoutbrak, setwithoutbrak] = useState([]);
+  const [withoutbrak, setwithoutbrak] = useState();
   const [DisplayName, setDisplayName] = useState("");
   const [Gender, setGender] = useState("");
   const [demo, SetDemo] = useState([]);
@@ -62,8 +54,8 @@ export default function App() {
   const [LocalName, setLocalName] = useState("");
   const [Wave, setWave] = useState([]);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const [value, setValue] = React.useState(0);
-  const [value1, setValue1] = React.useState(0);
+  const [value, setValue] = React.useState(30);
+  const [value1, setValue1] = React.useState(50);
   const handleSliderChange = (event, newValue) => { setValue(newValue) };
   const [isLoaded, setIsLoaded] = useState(false);
   const Input = MuiInput;
@@ -111,121 +103,104 @@ export default function App() {
       _onPaste_StripFormatting_IEPaste = false;
     }
   }
-
   const handleContentEditableChange = (e) => {
-   
     if (e.keyCode == "8") {
       if (document.getElementById("textid").querySelectorAll('div').length < 2) {
-
         if (document.getElementById("textid").querySelectorAll('span')[0].innerHTML == "<br>") {
           e.preventDefault();
           return false;
         }
-
-        else if (document.getElementById("textid").querySelectorAll('div')[0].innerHTML.length == 215) {
-        
+        else if (document.getElementById("textid").querySelectorAll('span')[0].innerHTML.length < 2) {
           document.getElementById("textid").querySelectorAll('span')[0].innerHTML = "<br>";
           e.preventDefault();
           return false;
         }
-
       }
-      if (document.getElementById("textid").querySelectorAll('div').length > 2) {
+      if (document.getElementById("textid").querySelectorAll('div').length == 2) {
         if (document.getElementById("textid").querySelectorAll('div')[1].innerHTML == "<br>" || document.getElementById("textid").querySelectorAll('div')[1].children[0].children[0].innerHTML == "<br>") {
           document.getElementById("textid").querySelectorAll('div')[1].remove();
-
           e.preventDefault();
           return false;
         }
       }
     }
-  
- 
-    // let div_length = document.getElementById("textid").querySelectorAll('div').length;
-    // if (div_length > 1) {
-    //   let length1 = div_length - 1;
-    //   let length2 = div_length - 2;
-    //   if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue) {
-    //     let val1 = document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue;
-    //     if (val1 == "") {
-    //       document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
-    //     }
-    //     else {
-    //       try {
-    //         if (typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined') {
-    //           document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
-    //         }
-    //         else {
-    //           if (document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == "") {
-    //             document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
-    //           }
-    //           if (document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>") {
-    //             document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
-    //           }
-    //         }
-    //       }
-    //       catch (e) { }
-    //     }
-    //   }
-    //   if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue == "" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML == "<br>")) {
-    //     document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' /><br/></prosody></span></voice>";
-    //   }
-    //   try {
-    //     if (window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == "") {
-    //       window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value = "[JennyMultilingualNeural]";
-    //     }
-    //   }
-    //   catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-  
   }
   const handleContentEditable = (e) => {
-
     if (e.key === 'Enter') { // 8 is backspace
-      try {
-        // document.body.textContent += ' Tab pressed';
-        var docFragment = document.createDocumentFragment();
-        var newEle = document.createElement('div');
-        var suffixNode = "<voice class='voiceclass' data-content='' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody class='' rate=''><break time='' ></break><br/></prosody></span></voice>";
-        newEle.innerHTML = suffixNode;
-        docFragment.appendChild(newEle);
-        if (navigator.userAgent.match(/firefox|fxios/i)) {
-          var range = window.getRangeAt(0);
-        }
-        else {
-          var range = window.getSelection().getRangeAt(0);
-        }
-        range.deleteContents();
-        document.getElementById("textid").appendChild(docFragment);
-        var tag = document.getElementById("textid");
-        // Creates range object
-        var setpos = document.createRange();
-        // Creates object for selection
-        var set = window.getSelection();
-        var pos = 1;
-        // Set start position of range
-        var el_length = document.getElementById("textid").childNodes.length;
-        el_length = el_length - 1;
-        // range.setStart(el.childNodes[el_length], 10);
-        setpos.setStart(tag.childNodes[el_length], pos);
-        setpos.collapse(true);
-        // Remove all ranges set
-        set.removeAllRanges();
-        // Add range with respect to range object.
-        set.addRange(setpos);
-        // Set cursor on focus
-        tag.focus();
-        e.preventDefault();
-        return false;
+      try{
+        debugger;
+      var docFragment = document.createDocumentFragment();
+      var newEle = document.createElement('div');
+      var suffixNode = "<voice class='voiceclass' data-content='' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+      newEle.innerHTML = suffixNode;
+      docFragment.appendChild(newEle);
+      if(navigator.userAgent.match(/firefox|fxios/i)){
+        var range = window.getSelection().getRangeAt(0);
       }
-      catch (e) {
+      else{
+         var range = window.getSelection().getRangeAt(0);
+      }
+      
+      
+      range.deleteContents();
+       document.getElementById("textid").appendChild(docFragment);
+
+      // range = document.createRange(); 
+      //range.insertNode(suffixNode);
+      //range.setStartAfter(newEle); 
+      //range.setStart(newEle);
+   
+      // var el = document.getElementById("textid");
+      // var el_length = document.getElementById("textid").childNodes.length;
+      // el_length = el_length - 1;
+      // range.setStart(el.childNodes[el_length], 10);
+
+      // range.collapse(true);
+      // var sel = window.getSelection(); 
+      // sel.removeAllRanges(); 
+      
+     
+
+      // sel.addRange(range);
+
+
+      var tag = document.getElementById("textid");
+              
+      // Creates range object
+      var setpos = document.createRange();
+        
+      // Creates object for selection
+      var set = window.getSelection();
+        var pos = 1;
+      // Set start position of range
+      var el_length = document.getElementById("textid").childNodes.length;
+       el_length = el_length - 1;
+      // range.setStart(el.childNodes[el_length], 10);
+      setpos.setStart(tag.childNodes[el_length], pos);
+        
+      // Collapse range within its boundary points
+      // Returns boolean
+      setpos.collapse(true);
+        
+      // Remove all ranges set
+      set.removeAllRanges();
+        
+      // Add range with respect to range object.
+      set.addRange(setpos);
+        
+      // Set cursor on focus
+      tag.focus();
+
+
+
+      e.preventDefault();
+      return false;
+      }
+      catch(e){
         console.log(e);
       }
+     
     }
-
-  
     let div_length = document.getElementById("textid").querySelectorAll('div').length;
     if (div_length > 1) {
       let length1 = div_length - 1;
@@ -233,19 +208,19 @@ export default function App() {
       if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue) {
         let val1 = document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue;
         if (val1 == "") {
-          document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+          document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
         }
         else {
           try {
             if (typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined') {
-              document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+              document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
             }
             else {
               if (document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == "") {
                 document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
               }
               if (document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>") {
-                document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+                document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
               }
             }
           }
@@ -253,7 +228,7 @@ export default function App() {
         }
       }
       if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue == "" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML == "<br>")) {
-        document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' /><br/></prosody></span></voice>";
+        document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'><span  class='text-node'><prosody rate=''><break time='' /><br/></prosody></span></voice>";
       }
       try {
         if (window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == "") {
@@ -265,103 +240,6 @@ export default function App() {
       }
     }
   }
-  const ssmlconvert = () => {
-    var nameewe = document.getElementsByClassName('text-node').length < 1;
-    console.log("nameewe", nameewe)
-    var name = document.getElementById('stylespeaking');
-    var newHTMLSSML = '';
-    try {
-      if (document.getElementById("textid").querySelectorAll('div').length > 0) {
-        let divlength = document.getElementById("textid").querySelectorAll('div').length;
-        for (let index = 0; index < divlength; index++) {
-          let data_content = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].attributes[0].name;
-          if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].innerHTML.includes("last-data")) {
-            let data_content_val = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].attributes[0].nodeValue;
-            data_content_val = data_content_val.replaceAll('[', '');
-            data_content_val = data_content_val.replaceAll(']', '');
-            let newHTML = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].outerHTML.replaceAll('</span>', '</mstts:express-as><s />');
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML = newHTML.replaceAll('</prosody>', '');
-                  newHTML = newHTML.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
-            newHTMLSSML += newHTML;
-          }
-          else {
-            let newHTML2 = document.getElementById("textid").querySelectorAll('div')[index].innerHTML;
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML2 = newHTML2.replaceAll('</prosody>', '');
-                  newHTML2 = newHTML2.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
-            // end
-            newHTMLSSML += newHTML2;
-
-          }
-        }
-      }
-    }
-    catch (e) {
-      console.log("error speaking style", e);
-    }
-    var innertext21 = document.getElementById('textid').innerHTML;
-    var data = document.getElementById('textid').value;
-    console.log("data", data)
-    var str = innertext21;
-    str = newHTMLSSML;
-    str = str.replaceAll('<span class="text-node">', '');
-    str = str.replaceAll('<div id="voicessml">', '');
-    str = str.replaceAll('</div>', '');
-    str = str.replaceAll('<div>', '');
-    str = str.replaceAll('<div id="voicessml">', '');
-    str = str.replaceAll('<br>', '');
-    str = str.replaceAll('class="voiceclass"', '');
-    str = str.replaceAll('[', '');
-    str = str.replaceAll(']', '');
-    str = str.replaceAll(']', '');
-    str = str.replaceAll('<span class="Pauseclass">', '');
-    str = str.replaceAll('&nbsp;', ' ');
-    str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
-    str = str.replaceAll(`class="`, ``);
-    str = str.replaceAll(`" data-name`, ``);
-    str = str.replaceAll(`rate="`, `rate="+`);
-    str = str.replaceAll(`rate"`, ``);
-    str = str.replaceAll(`span data-content=""`, ``);
-    str = str.replaceAll(`< text-node">`, ``);
-    str = str.replaceAll(`text-node" `, ``);
-    str = str.replaceAll(`</span>`, ``);
-    str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
-    str = str.replaceAll(`<prosody rate="+">`, ``);
-    str = str.replaceAll(`<prosody " rate="+">`, ``);
-    str = str.replaceAll(`last-data="</>"`, ``);
-    str = str.replaceAll('<prosody " rate="+"></prosody>', '');
-    str = str.replaceAll('< last-data="">', '');
-    str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
-    str = str.replaceAll('<break time=""></break>', '');
-    str = str.replaceAll('<break Pause="">', '<break time="');
-    str = str.replaceAll('</break>', '" />');
-    // ##################################  ssml Convert  ########################## 
-    var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
-    var startAftertag = '</speak>';
-    var startAftertagfe = str;
-    var textdata = closetagBefore + startAftertagfe + startAftertag;
-    console.log("textdata", textdata)
-    setwithoutbrak(textdata)
-  }
   // ################################## Ssml to Voice  ########################## 
   const playsound = (event) => {
     var nameewe = document.getElementsByClassName('text-node').length < 1;
@@ -372,44 +250,20 @@ export default function App() {
       if (document.getElementById("textid").querySelectorAll('div').length > 0) {
         let divlength = document.getElementById("textid").querySelectorAll('div').length;
         for (let index = 0; index < divlength; index++) {
+
           let data_content = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].attributes[0].name;
           if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].innerHTML.includes("last-data")) {
             let data_content_val = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].attributes[0].nodeValue;
             data_content_val = data_content_val.replaceAll('[', '');
             data_content_val = data_content_val.replaceAll(']', '');
             let newHTML = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].outerHTML.replaceAll('</span>', '</mstts:express-as><s />');
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML = newHTML.replaceAll('</prosody>', '');
-                  newHTML = newHTML.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
             newHTMLSSML += newHTML;
           }
           else {
             let newHTML2 = document.getElementById("textid").querySelectorAll('div')[index].innerHTML;
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML2 = newHTML2.replaceAll('</prosody>', '');
-                  newHTML2 = newHTML2.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
-            // end
             newHTMLSSML += newHTML2;
-
           }
+
         }
       }
     }
@@ -450,17 +304,17 @@ export default function App() {
     str = str.replaceAll('< last-data="">', '');
     str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
     str = str.replaceAll('<break time=""></break>', '');
-    str = str.replaceAll('<break Pause="">', '<break time="');
-    str = str.replaceAll('</break>', '" />');
-    // ##################################  ssml Convert  ########################## 
+    if (value == 30) {
+      str = str.replaceAll('</prosody>', '');
+    }
+    else {
+    }
     var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
     var startAftertag = '</speak>';
     var startAftertagfe = str;
     var textdata = closetagBefore + startAftertagfe + startAftertag;
-    console.log("textdata", textdata)
-    setwithoutbrak(textdata)
-    let date = textdata;
-    console.log('MP3 URl: ', date);
+    let date = textdata
+    console.log("date", date)
     setIsLoaded(true);
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
@@ -473,7 +327,6 @@ export default function App() {
       .then((response) => response.blob())
       .then((blob) => {
         setblobdata(blob)
-        setWave(blob)
         setIsLoaded(false);
         var blob = new Blob([blob]);
         var url = window.URL.createObjectURL(blob);
@@ -483,7 +336,7 @@ export default function App() {
       .catch(() => {
       })
   };
-  const Download = (event) => {
+  const handleChange = (event) => {
     var nameewe = document.getElementsByClassName('text-node').length < 1;
     console.log("nameewe", nameewe)
     var name = document.getElementById('stylespeaking');
@@ -498,38 +351,13 @@ export default function App() {
             data_content_val = data_content_val.replaceAll('[', '');
             data_content_val = data_content_val.replaceAll(']', '');
             let newHTML = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].outerHTML.replaceAll('</span>', '</mstts:express-as><s />');
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML = newHTML.replaceAll('</prosody>', '');
-                  newHTML = newHTML.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
             newHTMLSSML += newHTML;
           }
           else {
             let newHTML2 = document.getElementById("textid").querySelectorAll('div')[index].innerHTML;
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML2 = newHTML2.replaceAll('</prosody>', '');
-                  newHTML2 = newHTML2.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
-            // end
             newHTMLSSML += newHTML2;
-
           }
+
         }
       }
     }
@@ -570,45 +398,17 @@ export default function App() {
     str = str.replaceAll('< last-data="">', '');
     str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
     str = str.replaceAll('<break time=""></break>', '');
-    str = str.replaceAll('<break Pause="">', '<break time="');
-    str = str.replaceAll('</break>', '" />');
+    if (value == 30) {
+      str = str.replaceAll('</prosody>', '');
+    }
+    else {
+    }
     // ##################################  ssml Convert  ########################## 
     var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
     var startAftertag = '</speak>';
     var startAftertagfe = str;
     var textdata = closetagBefore + startAftertagfe + startAftertag;
-    console.log("textdata", textdata)
     setwithoutbrak(textdata)
-    let date = textdata;
-
-    fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
-      method: 'POST',
-      headers: {
-        'Ocp-Apim-Subscription-Key': '3751687d3f494502a2b7af3f62f675dc',
-        'X-Microsoft-OutputFormat': 'audio-24khz-96kbitrate-mono-mp3',
-        'Content-Type': 'application/ssml+xml',
-      }, body: date
-    })
-      .then((response) => response.blob())
-      .then((blob) => {
-        var blob = new Blob([blob]);
-        var url2 = window.URL.createObjectURL(blob);
-        console.log('MP3 URl: ', url2);
-        url2 = document.createElement('a');
-        url2.href = url2;
-        var file_name = "recording_tts_" + Date.now();
-        url2.setAttribute('download', `${file_name}.mp3`);
-        url2.click();
-        console.log('MP3 URl: ', url2);
-
-      })
-      .catch(() => {
-      })
-
-  };
-  const handleChange = (event) => {
-    ssmlconvert()
-
     if (event.target.checked) {
       setdivEditer("hidden");
       setssmlEditer("opan")
@@ -631,21 +431,9 @@ export default function App() {
   const handleClose = () => {
     setOpen5(false);
   };
-  const handleClickOpen2 = () => {
-    setOpen6(true);
-  };
-  const handleClose2 = () => {
-    setOpen6(false);
-  };
-  const handleClickOpen3 = () => {
-    setOpen7(true);
-    setOpen6(false);
-  };
-  const handleClose3 = () => {
-    setOpen7(false);
-  };
   // ##################################   Voice  ########################## 
   const Voice = (event) => {
+    debugger;
     var name = document.getElementById('textid').value;
     console.log("namedata", name)
     var name = event.currentTarget.children[1].dataset.name;
@@ -653,15 +441,17 @@ export default function App() {
     var lang = event.currentTarget.children[1].dataset.lang;
     var short = event.currentTarget.children[1].dataset.short;
     var sel = window.getSelection();
-    if (navigator.userAgent.match(/firefox|fxios/i)) {
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("data-content", "[" + name + "]");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("name", "" + short + "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("Gender", "" + gender + "");
+    if(navigator.userAgent.match(/firefox|fxios/i)){
+
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
+
     }
-    else {
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
+    else{
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
     }
   };
   // ##################################   Rate  ########################## 
@@ -675,32 +465,17 @@ export default function App() {
   // ##################################  Pause  ########################## 
   const Pause = (event) => {
     var name = event.currentTarget.innerText;
-    var tag_seltxt = addPause('break ', 'textid', value1);
-    console.log("tag_seltxt123", tag_seltxt)
+    if (value1 == 0 || value1 == '' || value1 == null && value1 == undefined) {
+      var sel = window.getSelection();
+      console.log("sel", sel)
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("break")[0].setAttribute("time", "");
+    }
+    else {
+      var sel = window.getSelection();
+      console.log("sel", sel)
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("break")[0].setAttribute("time", "[" + value1 + "ms" + "]");
+    }
   };
-  function addPause(tag, pause, value1) {
-    var innertext3 = document.getElementById(pause).innerHTML;
-
-    var selectpart = window.getSelection().anchorOffset;
-
-    var baseNode = window.getSelection().baseNode.data;
-    var text_value=window.getSelection().anchorNode.parentElement.innerHTML;
-    var rem_val=text_value.split(baseNode);
-    var part1 = baseNode.substring(0, selectpart);
-    var part2 = baseNode.substring(selectpart , window.getSelection().baseNode.length);
-debugger
-    if(rem_val[0]!='' && rem_val[0]!='<break time=""></break>')
-    {
-    window.getSelection().anchorNode.parentElement.innerHTML =rem_val[0]+part1+"<break class='Pause' data-name=''>["+value1+'ms'+"]</break>"+part2;
-    }
-    else if(rem_val[1]!=''){
-      window.getSelection().anchorNode.parentElement.innerHTML =part1+"<break class='Pause' data-name=''>["+value1+'ms'+"]</break>"+part2+rem_val[1];
-    }
-    else{
-    window.getSelection().anchorNode.parentElement.innerHTML =part1+"<break class='Pause' data-name=''>["+value1+'ms'+"]</break>"+part2;
-    }
- 
-  }
   const handleClick1 = () => {
     setOpen1(!open1);
   };
@@ -781,7 +556,6 @@ debugger
   }
   const Speakingstyle = (e) => {
     var name = document.getElementById('stylespeaking').value;
-    setstylespeaking(name)
     if (name == '' || name == null && name == undefined) {
       var sel = window.getSelection();
       console.log("sel", sel)
@@ -796,8 +570,78 @@ debugger
     }
   }
   const Savedata = (e) => {
-    ssmlconvert()
-    let date = withoutbrak;
+    var nameewe = document.getElementsByClassName('text-node').length < 1;
+    console.log("nameewe", nameewe)
+    var name = document.getElementById('stylespeaking');
+    var newHTMLSSML = '';
+    try {
+      if (document.getElementById("textid").querySelectorAll('div').length > 0) {
+        let divlength = document.getElementById("textid").querySelectorAll('div').length;
+        for (let index = 0; index < divlength; index++) {
+          let data_content = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].attributes[0].name;
+          if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].innerHTML.includes("last-data")) {
+            let data_content_val = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].attributes[0].nodeValue;
+            data_content_val = data_content_val.replaceAll('[', '');
+            data_content_val = data_content_val.replaceAll(']', '');
+            let newHTML = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].outerHTML.replaceAll('</span>', '</mstts:express-as><s />');
+            newHTMLSSML += newHTML;
+          }
+          else {
+            let newHTML2 = document.getElementById("textid").querySelectorAll('div')[index].innerHTML;
+            newHTMLSSML += newHTML2;
+          }
+
+        }
+      }
+    }
+    catch (e) {
+      console.log("error speaking style", e);
+    }
+    var innertext21 = document.getElementById('textid').innerHTML;
+    var data = document.getElementById('textid').value;
+    console.log("data", data)
+    var str = innertext21;
+    str = newHTMLSSML;
+    str = str.replaceAll('<span class="text-node">', '');
+    str = str.replaceAll('<div id="voicessml">', '');
+    str = str.replaceAll('</div>', '');
+    str = str.replaceAll('<div>', '');
+    str = str.replaceAll('<div id="voicessml">', '');
+    str = str.replaceAll('<br>', '');
+    str = str.replaceAll('class="voiceclass"', '');
+    str = str.replaceAll('[', '');
+    str = str.replaceAll(']', '');
+    str = str.replaceAll(']', '');
+    str = str.replaceAll('<span class="Pauseclass">', '');
+    str = str.replaceAll('&nbsp;', ' ');
+    str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
+    str = str.replaceAll(`class="`, ``);
+    str = str.replaceAll(`" data-name`, ``);
+    str = str.replaceAll(`rate="`, `rate="+`);
+    str = str.replaceAll(`rate"`, ``);
+    str = str.replaceAll(`span data-content=""`, ``);
+    str = str.replaceAll(`< text-node">`, ``);
+    str = str.replaceAll(`text-node" `, ``);
+    str = str.replaceAll(`</span>`, ``);
+    str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
+    str = str.replaceAll(`<prosody rate="+">`, ``);
+    str = str.replaceAll(`<prosody " rate="+">`, ``);
+    str = str.replaceAll(`last-data="</>"`, ``);
+    str = str.replaceAll('<prosody " rate="+"></prosody>', '');
+    str = str.replaceAll('< last-data="">', '');
+    str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
+    str = str.replaceAll('<break time=""></break>', '');
+    if (value == 30) {
+      str = str.replaceAll('</prosody>', '');
+    }
+    else {
+    }
+    // ##################################  ssml Convert  ########################## 
+    var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
+    var startAftertag = '</speak>';
+    var startAftertagfe = str;
+    var textdata = closetagBefore + startAftertagfe + startAftertag;
+    let date = textdata;
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
@@ -815,15 +659,10 @@ debugger
       })
       .catch(() => {
       })
-    var innertext21 = document.getElementById('textid').innerHTML;
     let datavoice = {
-      ssml: withoutbrak,
-      Voicetext: innertext21,
-      tts_recording_uuid: tts_recording_uuid,
-      Wave: waveurl, FileName: FileName, Rate: value, Break: value1,
-      speakingstyle: stylespeaking, Gender: Gender1, LocalName: LocalName1, LocaleName: LocaleName1, DisplayName: DisplayName1
+      ssml: textdata,
+      Voicetext: innertext21, Wave: waveurl, FileName: FileName
     }
-
     fetch("https://158.69.73.50/app/tts_recordings/recording_api.php", {
       method: 'POST',
       headers: {
@@ -835,18 +674,8 @@ debugger
     })
       .then((response) => response.text())
       .then((data) => {
-        if (!data.ok) {
-          setOpen5(false)
-          setOpen7(false);
-          setOpen6(false);
-          return swal({
-            title: "Save!",
-            text: "Your File Saved!",
-            icon: "success",
-            timer: 1500,
-            
-          });
-        }
+        console.log("data", data);
+
       })
       .catch((error) => {
         console.log("error", error);
@@ -866,37 +695,24 @@ debugger
       })
       .then((response) => response.json())
       .then((data) => {
-        if (data == '' || data == null && data == undefined) {
-          console.log("mydata", data);
-        }
-        else {
-          SetWavelist(data);
-        }
+        SetWavelist(data);
+        console.log("mydata", data);
       })
       .catch((err) => {
         console.log("myerr", err);
       })
   }, [])
   const Viewdata = (data) => {
-    handleClick1()
-    // setDisplayName1(data.display_name)
-    setGender1(data.gender)
-    settts_recording_uuid(data.tts_recording_uuid)
-    setLocalName1(data.local_name)
-    setLocaleName1(data.locale_name)
-    setrecording_ssml(data.recording_ssml)
+
     setFileName(data.recording_filename)
-    setValue(data.recording_rate)
-    setValue1(data.recording_break)
-    try {
-      document.getElementById("textid").innerHTML = data.recording_text;
-      document.getElementById("textareassml").value = data.recording_ssml;
+    try{
+    document.getElementById("textid").innerHTML = data.recording_text;
+    document.getElementById("textareassml").value  = data.recording_ssml;
     }
-    catch (e) {
+    catch(e){
       console.log(e);
     }
   }
-  console.log("FileName",FileName)
   return (
     <Container fluid>
       <br />
@@ -928,77 +744,24 @@ debugger
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
-        open={open6}
-        onClose={handleClose2}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description" >
-        <DialogTitle id="alert-dialog-title">
-          {"Are you sure you want to leave without saving?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          {
-            
-           FileName.length > 1 ?(
-             
-            null
-           ): <Button onClick={handleClickOpen3}>Save</Button>
-
-          }
-         
-          <Button onClick={refreshPage} autoFocus>
-            Leave
-          </Button>
-          <Button onClick={handleClose2} autoFocus>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={open7}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description" >
-        <DialogTitle id="alert-dialog-title">
-          {"Are you sure you want to leave without saving?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <br></br>
-            <label>File Name </label>
-            <div class="inputWithIcon inputIconBg">
-              <input type="text" value={FileName} onChange={e => setFileName(e.target.value)} />
-              <i class="" aria-hidden="true">.txt</i>
-            </div>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={Savedata}>Save</Button>
-
-          <Button onClick={handleClose3} autoFocus>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Row>
         <Col xs={12} md={2} className="border-round">
           <Dropdown className="form-control ">
-            <h6 className="text-center"> All Recording</h6>
-            <hr />
-            {
-              Wavelist.map((data) => (
-                <Dropdown.Item href="#" onClick={() => Viewdata(data)}>
-                  <i class="fa fa-file-text-o" ></i>
-                  <span className="voicelist">{data.recording_filename}</span>
-                </Dropdown.Item>
-              )
-              )
-            }
+            <Dropdown.Toggle id="dropdown-basic" className="save">
+              <i className="fa fa-file-o"></i> All Recording
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="form-control Recording">
+              {
+                Wavelist.map((data) => (
+                  <Dropdown.Item href="#"  onClick={() => Viewdata(data)}>
+                    <i class="fa fa-file-text-o" ></i>  
+                    {data.recording_filename}
+                 
+                  </Dropdown.Item>
+                )
+                )
+              }
+            </Dropdown.Menu>
           </Dropdown>
         </Col>
         <Col xs={12} md={7} >
@@ -1010,8 +773,8 @@ debugger
                     <i className="fa fa-file-o"></i> New Recording
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item href="" onClick={handleClickOpen2}><i class="fa fa-file-text-o"></i> New text file</Dropdown.Item>
-                    <Dropdown.Item href="">
+                    <Dropdown.Item href="#/action-1" onClick={handleClickOpen}><i class="fa fa-file-text-o"></i> New text file</Dropdown.Item>
+                    <Dropdown.Item href="#/action-2">
                       <i class="fa fa-file-excel-o" ></i> New lexicon file
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -1023,13 +786,13 @@ debugger
                     <i className="fa fa-floppy-o"></i> Save
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item href="" onClick={handleClickOpen}><i class="fa fa-file-audio-o" ></i> Save as</Dropdown.Item>
+                    <Dropdown.Item href="#/action-1"><i class="fa fa-file-audio-o" ></i> Save as</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </Col>
               <Col xs={12} md={2}>
-                <p className="line2 save" onClick={Download}>
-                  <a href="#" className="line2 save" >
+                <p className="line2 save">
+                  <a href="" className="line2 save">
                     <i className="fa fa-download"></i> Download
                   </a>
                 </p>
@@ -1061,9 +824,9 @@ debugger
           <br></br>
           <div contenteditable="true" className={divEditer} id="textid" placeholder="Enter text" onKeyPress={handleContentEditable} onKeyDown={handleContentEditableChange} onPaste={handleContentEditableChangeBlur}>
             <div id="voicessml">
-              <voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'>
+              <voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-ChristopherNeural' Gender='Male'>
                 <span data-content='' class="text-node" >
-                  <prosody class='' rate=''>
+                  <prosody class='' rate=''> <break time='' />
                     <br /></prosody></span>
               </voice>
             </div>
@@ -1108,11 +871,11 @@ debugger
                           if (items.Locale == 'en-US' || items.Locale == 'en-CA' || items.Locale == 'fr-FR' || items.Locale == 'fr-CA' && items.VoiceType == 'Neural') {
                             return <a
                               onClick={() => saveUser(items)}
-                              class="dropdown-item "
+                              class="dropdown-item"
                               href="#"
                               key={items.id}
                             >
-                              <span className="product_list active">
+                              <span className="product_list">
                                 {" "}
                                 {items.LocaleName}{" "}
                               </span>{" "}
@@ -1131,32 +894,28 @@ debugger
                       LocaleName == "" || LocaleName == "undefined" && LocaleName == "null" ?
                         (
                           null
-                        ) : <div class="overdata">{
-                          User.map((data) => (
-                            data.LocaleName == LocaleName ? (
-                              <span className="lisdata">
-                                <span className="blocks active" onClick={Voice} >
-                                  <Checkbox onClick={() => saveDatalist(data)}
-
-                                    {...label}
-                                    icon={
-                                      data.Gender == "Male" ? (
-                                        <i class="fa fa-male"></i>
-                                      ) :
-                                        <i class="fa fa-female" aria-hidden="true"></i>
-                                    }
-                                    checkedIcon={
-                                      data.Gender == "Male" ? (
-                                        <i class="fa fa-male" aria-hidden="true"></i>
-                                      ) :
-                                        <i class="fa fa-female" aria-hidden="true"></i>
-                                    }
-                                  />
-                                  <span className="text active" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Gender} data-lang={data.DisplayName}>{data.DisplayName}</span>
-                                </span>
-                              </span>
-                            ) : null
-                          ))
+                        ) : <div class="overdata">{User.map((data) => (
+                          data.LocaleName == LocaleName ? (
+                            <span class="blocks" onClick={Voice} >
+                              <Checkbox onClick={() => saveDatalist(data)}
+                                {...label}
+                                icon={
+                                  data.Gender == "Male" ? (
+                                    <i class="fa fa-male"></i>
+                                  ) :
+                                    <i class="fa fa-female" aria-hidden="true"></i>
+                                }
+                                checkedIcon={
+                                  data.Gender == "Male" ? (
+                                    <i class="fa fa-male" aria-hidden="true"></i>
+                                  ) :
+                                    <i class="fa fa-female" aria-hidden="true"></i>
+                                }
+                              />
+                              <span className="text" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Gender} data-lang={data.DisplayName}>{data.DisplayName}</span>
+                            </span>
+                          ) : null
+                        ))
                         }
                         </div>
                     }
