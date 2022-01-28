@@ -23,10 +23,17 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-.voicelist{
-  padding: 15px 10px;
-}
 
+  .voicelist {
+    padding: 15px 5px;
+    font-size: 13px;
+  
+}
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0px 0px !important;
+}
 .List{
   display: inline-block;
   border: 1px solid #ddd;
@@ -269,7 +276,7 @@ span.voiceclass:before {
   font-size: 14px;
 }
 .voiceclass break:before {
-  content: attr(time);
+  content: attr(data-name);
   color:#0376d2;
   font-weight:600;
   padding: 0px 0px;
@@ -310,9 +317,7 @@ div#textid div {
 s{
   text-decoration-line: none !important;
 }
-prosody{
-  display: inline-block;
-}
+
 /*Don't forget to add Font Awesome CSS : "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"*/
 input[type="text"] {
   width: 100%;
@@ -362,4 +367,14 @@ input[type="text"]:focus {
 .inputWithIcon.inputIconBg input[type="text"]:focus + i {
   color: #fff;
   background-color: dodgerBlue;
+}
+.css-cvhtoe-MuiButtonBase-root-MuiListItemButton-root {
+  
+  width: 90%;
+  float: left;
+}
+.eraser{
+  width: 5%;
+  float: left;
+  padding: 7px 0px;
 }

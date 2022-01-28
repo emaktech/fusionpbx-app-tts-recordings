@@ -30,6 +30,8 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AudioPlayer from "react-h5-audio-player";
 import 'react-h5-audio-player/lib/styles.css';
 import swal from 'sweetalert';
+
+
 export default function App() {
   const [checked, setChecked] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
@@ -109,73 +111,84 @@ export default function App() {
       _onPaste_StripFormatting_IEPaste = false;
     }
   }
+
   const handleContentEditableChange = (e) => {
+   
     if (e.keyCode == "8") {
       if (document.getElementById("textid").querySelectorAll('div').length < 2) {
+
         if (document.getElementById("textid").querySelectorAll('span')[0].innerHTML == "<br>") {
           e.preventDefault();
           return false;
         }
+
         else if (document.getElementById("textid").querySelectorAll('div')[0].innerHTML.length == 215) {
+        
           document.getElementById("textid").querySelectorAll('span')[0].innerHTML = "<br>";
           e.preventDefault();
           return false;
         }
+
       }
       if (document.getElementById("textid").querySelectorAll('div').length > 2) {
         if (document.getElementById("textid").querySelectorAll('div')[1].innerHTML == "<br>" || document.getElementById("textid").querySelectorAll('div')[1].children[0].children[0].innerHTML == "<br>") {
           document.getElementById("textid").querySelectorAll('div')[1].remove();
+
           e.preventDefault();
           return false;
         }
       }
     }
-    let div_length = document.getElementById("textid").querySelectorAll('div').length;
-    if (div_length > 1) {
-      let length1 = div_length - 1;
-      let length2 = div_length - 2;
-      if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue) {
-        let val1 = document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue;
-        if (val1 == "") {
-          document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
-        }
-        else {
-          try {
-            if (typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined') {
-              document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
-            }
-            else {
-              if (document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == "") {
-                document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
-              }
-              if (document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>") {
-                document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
-              }
-            }
-          }
-          catch (e) { }
-        }
-      }
-      if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue == "" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML == "<br>")) {
-        document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' /><br/></prosody></span></voice>";
-      }
-      try {
-        if (window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == "") {
-          window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value = "[JennyMultilingualNeural]";
-        }
-      }
-      catch (error) {
-        console.log(error);
-      }
-    }
+  
+ 
+    // let div_length = document.getElementById("textid").querySelectorAll('div').length;
+    // if (div_length > 1) {
+    //   let length1 = div_length - 1;
+    //   let length2 = div_length - 2;
+    //   if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue) {
+    //     let val1 = document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue;
+    //     if (val1 == "") {
+    //       document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+    //     }
+    //     else {
+    //       try {
+    //         if (typeof document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1] == 'undefined') {
+    //           document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+    //         }
+    //         else {
+    //           if (document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue == "") {
+    //             document.getElementById("textid").querySelectorAll('div')[length1].childNodes[0].attributes[1].nodeValue = val1;
+    //           }
+    //           if (document.getElementById("textid").querySelectorAll('div')[length1].innerHTML == "<br>") {
+    //             document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' ></break><br/></prosody></span></voice>";
+    //           }
+    //         }
+    //       }
+    //       catch (e) { }
+    //     }
+    //   }
+    //   if (document.getElementById("textid").querySelectorAll('div')[length2].firstChild.attributes[1].nodeValue == "" && (document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML.length < 1 || document.getElementById("textid").querySelectorAll('div')[length1].children[0].children[0].innerHTML == "<br>")) {
+    //     document.getElementById("textid").querySelectorAll('div')[length1].innerHTML = "<voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody rate=''><break time='' /><br/></prosody></span></voice>";
+    //   }
+    //   try {
+    //     if (window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value == "") {
+    //       window.getSelection().anchorNode.parentElement.parentNode.attributes[1].value = "[JennyMultilingualNeural]";
+    //     }
+    //   }
+    //   catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+  
   }
   const handleContentEditable = (e) => {
+
     if (e.key === 'Enter') { // 8 is backspace
       try {
         // document.body.textContent += ' Tab pressed';
         var docFragment = document.createDocumentFragment();
         var newEle = document.createElement('div');
-        var suffixNode = "<voice class='voiceclass' data-content='' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><br/></span></voice>";
+        var suffixNode = "<voice class='voiceclass' data-content='' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><prosody class='' rate=''><break time='' ></break><br/></prosody></span></voice>";
         newEle.innerHTML = suffixNode;
         docFragment.appendChild(newEle);
         if (navigator.userAgent.match(/firefox|fxios/i)) {
@@ -211,6 +224,8 @@ export default function App() {
         console.log(e);
       }
     }
+
+  
     let div_length = document.getElementById("textid").querySelectorAll('div').length;
     if (div_length > 1) {
       let length1 = div_length - 1;
@@ -295,6 +310,7 @@ export default function App() {
             }
             // end
             newHTMLSSML += newHTML2;
+
           }
         }
       }
@@ -335,10 +351,9 @@ export default function App() {
     str = str.replaceAll('<prosody " rate="+"></prosody>', '');
     str = str.replaceAll('< last-data="">', '');
     str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
-    str = str.replaceAll('Pause', 'time');
-    str = str.replaceAll('</break>', '" />');
-    str = str.replaceAll('">" />', '" />');
-    str = str.replaceAll('id="prosody"', '');
+    // str = str.replaceAll('<break time=""></break>', '');
+    // str = str.replaceAll('<break Pause="">', '<break time="');
+    // str = str.replaceAll('</break>', '" />');
     // ##################################  ssml Convert  ########################## 
     var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
     var startAftertag = '</speak>';
@@ -393,6 +408,7 @@ export default function App() {
             }
             // end
             newHTMLSSML += newHTML2;
+
           }
         }
       }
@@ -433,10 +449,9 @@ export default function App() {
     str = str.replaceAll('<prosody " rate="+"></prosody>', '');
     str = str.replaceAll('< last-data="">', '');
     str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
-    str = str.replaceAll('Pause', 'time');
+    str = str.replaceAll('<break time=""></break>', '');
+    str = str.replaceAll('<break Pause="">', '<break time="');
     str = str.replaceAll('</break>', '" />');
-    str = str.replaceAll('">" />', '" />');
-    str = str.replaceAll('id="prosody"', '');
     // ##################################  ssml Convert  ########################## 
     var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
     var startAftertag = '</speak>';
@@ -513,6 +528,7 @@ export default function App() {
             }
             // end
             newHTMLSSML += newHTML2;
+
           }
         }
       }
@@ -553,10 +569,9 @@ export default function App() {
     str = str.replaceAll('<prosody " rate="+"></prosody>', '');
     str = str.replaceAll('< last-data="">', '');
     str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
-    str = str.replaceAll('Pause', 'time');
-    str = str.replaceAll('</break>', '" />');
-    str = str.replaceAll('">" />', '" />');
-    str = str.replaceAll('id="prosody"', '');
+    // str = str.replaceAll('<break time=""></break>', '');
+    // str = str.replaceAll('<break Pause="">', '<break time="');
+    // str = str.replaceAll('</break>', '" />');
     // ##################################  ssml Convert  ########################## 
     var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
     var startAftertag = '</speak>';
@@ -565,6 +580,7 @@ export default function App() {
     console.log("textdata", textdata)
     setwithoutbrak(textdata)
     let date = textdata;
+
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
@@ -584,9 +600,11 @@ export default function App() {
         url2.setAttribute('download', `${file_name}.mp3`);
         url2.click();
         console.log('MP3 URl: ', url2);
+
       })
       .catch(() => {
       })
+
   };
   const handleChange = (event) => {
     ssmlconvert()
@@ -641,78 +659,18 @@ export default function App() {
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("Gender", "" + gender + "");
     }
     else {
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
     }
   };
   // ##################################   Rate  ########################## 
   const Rate = (event) => {
-    debugger
-    var name = event.currentTarget.innerHTML;
-    var tag_seltxt = addRate('prosody', 'textid', value);
-  };
-  function addRate(tag, rate, value) {
-    debugger
-    var firstpart;
-    var secondpart;
-    var thirdpart;
-    var finaltag;
-    var selectpart = window.getSelection().toString();
-
-    var innertext2 = document.getSelection().anchorNode.parentNode.innerHTML;
-    var patt1 = "prosody";
-    var results = innertext2.match(patt1);
-    var ratealldata = document.getSelection().anchorNode.parentNode.parentNode.innerHTML;
-
-    if (ratealldata.match()[0] == "prosody") {
-      var replcdata = ratealldata.replaceAll(selectpart)
-    }
-
-    //  var matchrate = ratealldata.match("prosody")
-    // try {
-    //   var psdData2 = document.getSelection().anchorNode.parentNode.outerHTML.remove();
-    //   var check = psdData2.includes("prosody");
-    //   if (check) {
-    //     var textDataProsody2 = document.getSelection().anchorNode.parentNode.innerHTML;
-    //     document.getSelection().anchorNode.parentNode.outerHTML = textDataProsody2
-    //   }
-    // }
-    // catch (e) {
-    // }
-    // var ratealldata= document.getSelection().anchorNode.parentNode.parentNode.innerHTML;
-
-    //   var innertext2 = document.getElementById(rate).innerHTML;
-    //   var selectpart = window.getSelection().toString();
-    //   var firstpart = document.getSelection().anchorNode.parentNode;
-    //   var secondpart =document.getSelection().anchorNode.parentNode.innerHTML
-    //  var finaltag = firstpart + secondpart + thirdpart;
-    // var selectpart = window.getSelection().baseNode.data;
-
-    if (selectpart.length < 1) {
-      return false;
-    }
-    // if(ratealldata.length > 1){
-    // var explode = replcdata.split(selectpart);
-    // firstpart = explode[0];
-
-    // else
-    var explode = innertext2.split(selectpart);
-    firstpart = explode[0];
-    if (typeof explode[1] != "undefined")
-      thirdpart = explode[1];
-    else
-      thirdpart = "";
-    if (value == 0) {
-      return null
-    }
-    else {
-      secondpart = '<prosody id="prosody" class="rate" data-name="' + value + "%" + '">' + selectpart + '</prosody>';
-    }
-    finaltag = firstpart + secondpart + thirdpart;
-    var x = document.getSelection().anchorNode.parentNode;
-    x.innerHTML = finaltag;
-    return finaltag;
+    var name = document.getElementsByClassName('text-node').value;
+    var sel = window.getSelection();
+    console.log("sel", sel)
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("prosody")[0].setAttribute("rate", + value + ".00%");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("prosody")[0].setAttribute("class", 'rate');
   }
   // ##################################  Pause  ########################## 
   const Pause = (event) => {
@@ -722,25 +680,32 @@ export default function App() {
   };
   function addPause(tag, pause, value1) {
     var innertext3 = document.getElementById(pause).innerHTML;
+
     var selectpart = window.getSelection().anchorOffset;
+
     var baseNode = window.getSelection().baseNode.data;
-    var text_value = window.getSelection().anchorNode.parentElement.innerHTML;
-    var rem_val = text_value.split(baseNode);
+    var text_value=window.getSelection().anchorNode.parentElement.innerHTML;
+    var rem_val=text_value.split(baseNode);
     var part1 = baseNode.substring(0, selectpart);
-    var part2 = baseNode.substring(selectpart, window.getSelection().baseNode.length);
-    if (value1 == 0) {
-      return null
+    var part2 = baseNode.substring(selectpart , window.getSelection().baseNode.length);
+debugger
+    if(rem_val[0]!='' && rem_val[0]!='<break time=""></break>')
+    {
+      var name = document.getElementsByClassName('text-node').value;
+      var sel = window.getSelection();
+      console.log("sel", sel)
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("break")[0].setAttribute("data-name", [+value1+'ms']);
     }
-    else
-      if (rem_val[0] != '' && rem_val[0] != '<break time=""></break>') {
-        window.getSelection().anchorNode.parentElement.innerHTML = rem_val[0] + part1 + "<break class='Pause' data-name=[" + value1 + 'ms' + "]></break>" + part2;
-      }
-      else if (rem_val[1] != '') {
-        window.getSelection().anchorNode.parentElement.innerHTML = part1 + "<break class='Pause' data-name=[" + value1 + 'ms' + "]></break>" + part2 + rem_val[1];
-      }
-      else {
-        window.getSelection().anchorNode.parentElement.innerHTML = part1 + "<break class='Pause' data-name=[" + value1 + 'ms' + "]></break>" + part2;
-      }
+    else if(rem_val[1]!=''){
+      var name = document.getElementsByClassName('text-node').value;
+      var sel = window.getSelection();
+      console.log("sel", sel)
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("break")[0].setAttribute("data-name", +value1+'ms');
+    }
+    else{
+    window.getSelection().anchorNode.parentElement.innerHTML =part1+"<break class='Pause' data-name=["+value1+'ms'+"]></break>"+part2;
+    }
+ 
   }
   const handleClick1 = () => {
     setOpen1(!open1);
@@ -837,102 +802,8 @@ export default function App() {
     }
   }
   const Savedata = (e) => {
-    var nameewe = document.getElementsByClassName('text-node').length < 1;
-    console.log("nameewe", nameewe)
-    var name = document.getElementById('stylespeaking');
-    var newHTMLSSML = '';
-    try {
-      if (document.getElementById("textid").querySelectorAll('div').length > 0) {
-        let divlength = document.getElementById("textid").querySelectorAll('div').length;
-        for (let index = 0; index < divlength; index++) {
-          let data_content = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].attributes[0].name;
-          if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].innerHTML.includes("last-data")) {
-            let data_content_val = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].attributes[0].nodeValue;
-            data_content_val = data_content_val.replaceAll('[', '');
-            data_content_val = data_content_val.replaceAll(']', '');
-            let newHTML = document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].outerHTML.replaceAll('</span>', '</mstts:express-as><s />');
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML = newHTML.replaceAll('</prosody>', '');
-                  newHTML = newHTML.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
-            newHTMLSSML += newHTML;
-          }
-          else {
-            let newHTML2 = document.getElementById("textid").querySelectorAll('div')[index].innerHTML;
-            try {
-              if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].name == "rate") {
-                // check blank value
-                if (document.getElementById("textid").querySelectorAll('div')[index].childNodes[0].childNodes[0].childNodes[0].attributes[1].nodeValue == "") {
-                  newHTML2 = newHTML2.replaceAll('</prosody>', '');
-                  newHTML2 = newHTML2.replaceAll('<prosody class="" rate="">', '');
-                }
-              }
-            }
-            catch (e) {
-              console.log(e);
-            }
-            // end
-            newHTMLSSML += newHTML2;
-          }
-        }
-      }
-    }
-    catch (e) {
-      console.log("error speaking style", e);
-    }
-    var innertext21 = document.getElementById('textid').innerHTML;
-    var data = document.getElementById('textid').value;
-    console.log("data", data)
-    var str = innertext21;
-    str = newHTMLSSML;
-    str = str.replaceAll('<span class="text-node">', '');
-    str = str.replaceAll('<div id="voicessml">', '');
-    str = str.replaceAll('</div>', '');
-    str = str.replaceAll('<div>', '');
-    str = str.replaceAll('<div id="voicessml">', '');
-    str = str.replaceAll('<br>', '');
-    str = str.replaceAll('class="voiceclass"', '');
-    str = str.replaceAll('[', '');
-    str = str.replaceAll(']', '');
-    str = str.replaceAll(']', '');
-    str = str.replaceAll('<span class="Pauseclass">', '');
-    str = str.replaceAll('&nbsp;', ' ');
-    str = str.replaceAll(`<span data-content="" last-data="" class="text-node">`, ``);
-    str = str.replaceAll(`class="`, ``);
-    str = str.replaceAll(`" data-name`, ``);
-    str = str.replaceAll(`rate="`, `rate="+`);
-    str = str.replaceAll(`rate"`, ``);
-    str = str.replaceAll(`span data-content=""`, ``);
-    str = str.replaceAll(`< text-node">`, ``);
-    str = str.replaceAll(`text-node" `, ``);
-    str = str.replaceAll(`</span>`, ``);
-    str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
-    str = str.replaceAll(`<prosody rate="+">`, ``);
-    str = str.replaceAll(`<prosody " rate="+">`, ``);
-    str = str.replaceAll(`last-data="</>"`, ``);
-    str = str.replaceAll('<prosody " rate="+"></prosody>', '');
-    str = str.replaceAll('< last-data="">', '');
-    str = str.replaceAll('<s /><mstts:express-as style="" last-data="">', '');
-    str = str.replaceAll('Pause', 'time');
-    str = str.replaceAll('</break>', '" />');
-    str = str.replaceAll('">" />', '" />');
-    str = str.replaceAll('id="prosody"', '');
-    // ##################################  ssml Convert  ########################## 
-    var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
-    var startAftertag = '</speak>';
-    var startAftertagfe = str;
-    var textdata = closetagBefore + startAftertagfe + startAftertag;
-    console.log("textdata", textdata)
-    setwithoutbrak(textdata)
-    let date = textdata;
+    ssmlconvert()
+    let date = withoutbrak;
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
@@ -944,7 +815,6 @@ export default function App() {
       .then((response) => response.blob())
       .then((blob) => {
         setblobdata(blob)
-        console.log("blob",blob)
         var blob = new Blob([blob]);
         var url = window.URL.createObjectURL(blob);
         setwaveurl(url)
@@ -956,10 +826,10 @@ export default function App() {
       ssml: withoutbrak,
       Voicetext: innertext21,
       tts_recording_uuid: tts_recording_uuid,
-      Wave: blobdata, FileName: FileName, Rate: value,
-      Break: value1, speakingstyle: stylespeaking, Gender: Gender1,
-      LocalName: LocalName1, LocaleName: LocaleName1, DisplayName: DisplayName1
+      Wave: waveurl, FileName: FileName, Rate: value, Break: value1,
+      speakingstyle: stylespeaking, Gender: Gender1, LocalName: LocalName1, LocaleName: LocaleName1, DisplayName: DisplayName1
     }
+
     fetch("https://158.69.73.50/app/tts_recordings/recording_api.php", {
       method: 'POST',
       headers: {
@@ -970,46 +840,23 @@ export default function App() {
       }, body: JSON.stringify(datavoice)
     })
       .then((response) => response.text())
-    swal({
-      title: "Save!",
-      text: "Your File Saved!",
-      icon: "success",
-    })
-      .then(function (result) {
-        if (!result.ok) {
+      .then((data) => {
+        if (!data.ok) {
           setOpen5(false)
           setOpen7(false);
           setOpen6(false);
+          return swal({
+            title: "Save!",
+            text: "Your File Saved!",
+            icon: "success",
+            timer: 1500,
+            
+          });
         }
-        refreshPage2()
       })
       .catch((error) => {
         console.log("error", error);
       })
-
-  }
-  function refreshPage2() {
-    fetch(
-      "https://158.69.73.50/app/tts_recordings/recording_api.php",
-      {
-        method: "GET",
-        headers: {
-          "cache-control": "no-cache",
-        }
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data == '' || data == null && data == undefined) {
-          console.log("mydata", data);
-        }
-        else {
-          SetWavelist(data);
-        }
-      })
-      .catch((err) => {
-        console.log("myerr", err);
-      })
-
   }
   function refreshPage() {
     window.location.reload();
@@ -1038,45 +885,24 @@ export default function App() {
   }, [])
   const Viewdata = (data) => {
     handleClick1()
+    // setDisplayName1(data.display_name)
     setGender1(data.gender)
-    setValue(data.recording_rate)
+    settts_recording_uuid(data.tts_recording_uuid)
     setLocalName1(data.local_name)
-    setValue1(data.recording_break)
     setLocaleName1(data.locale_name)
-    setFileName(data.recording_filename)
     setrecording_ssml(data.recording_ssml)
-    settts_recording_uuid(data.recording_uuid)
+    setFileName(data.recording_filename)
+    setValue(data.recording_rate)
+    setValue1(data.recording_break)
     try {
-      document.getElementById("textid").innerHTML = data.recording_description;
+      document.getElementById("textid").innerHTML = data.recording_text;
       document.getElementById("textareassml").value = data.recording_ssml;
     }
     catch (e) {
       console.log(e);
     }
   }
-  const eraser = () => {
-    var sel = window.getSelection();
-    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[JennyMultilingualNeural]");
-  }
-  const eraserRate = (event) => {
-    var sel = window.getSelection();
-    try {
-      let psdData = sel.anchorNode.parentNode.outerHTML;
-      let check = psdData.includes("prosody");
-      if (check) {
-        let textDataProsody = sel.anchorNode.parentNode.innerHTML;
-        sel.anchorNode.parentNode.outerHTML = textDataProsody
-      }
-    }
-    catch (e) {
-    }
-  };
-  const eraserbreak = (event) => {
-    var sel = window.getSelection();
-    var nameewe2 = window.getSelection().getRangeAt(0).commonAncestorContainer.parentNode.parentNode.innerText
-    window.getSelection().baseNode.nextSibling.remove();
-    window.getSelection().getRangeAt(0).commonAncestorContainer.innerHTML = nameewe2;
-  };
+  console.log("FileName",FileName)
   return (
     <Container fluid>
       <br />
@@ -1118,15 +944,19 @@ export default function App() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-
+           
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           {
-            FileName.length > 1 ? (
-              null
-            ) : <Button onClick={handleClickOpen3}>Save</Button>
+            
+           FileName.length > 1 ?(
+             
+            null
+           ): <Button onClick={handleClickOpen3}>Save</Button>
+
           }
+         
           <Button onClick={refreshPage} autoFocus>
             Leave
           </Button>
@@ -1214,8 +1044,8 @@ export default function App() {
               <Col xs={12} md={4}>
                 <i className="fa fa-undo line3"></i>{" "}
                 <i className="fa fa-repeat line3"></i>
-                {/* <i className="fa fa-eraser line3"></i>{" "}
-                <i className="fa fa-bookmark-o line3"></i> */}
+                <i className="fa fa-eraser line3"></i>{" "}
+                <i className="fa fa-bookmark-o line3"></i>
                 <Switch
                   className="line3"
                   checked={checked}
@@ -1239,9 +1069,11 @@ export default function App() {
             <div id="voicessml">
               <voice class='voiceclass' data-content='[JennyMultilingualNeural]' name='en-US-JennyMultilingualNeural' Gender='Female'>
                 <span data-content='' class="text-node" >
-                  <br /></span>
+                  <prosody class='' rate=''>
+                    <br /></prosody></span>
               </voice>
             </div>
+
           </div>
           <TextareaAutosize
             aria-label="empty textarea"
@@ -1255,8 +1087,7 @@ export default function App() {
         </Col>
         <Col xs={12} md={3} className="border-round">
           <List
-            className="listdata"
-            sx={{}}
+            sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
@@ -1271,8 +1102,8 @@ export default function App() {
                 {open1 ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
               <ListItemText primary="Voice " />
+              <i className="fa fa-eraser" aria-hidden="true"></i>
             </ListItemButton>
-            <a href="#" className="eraser" onClick={eraser}><i className="fa fa-eraser" aria-hidden="true"></i></a>
             <Collapse in={open1} timeout="auto" unmountOnExit>
               <List component="div" disablePadding className="language">
                 <ListItemButton sx={{ pl: 4 }}>
@@ -1374,8 +1205,8 @@ export default function App() {
                 {open3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
               <ListItemText primary="Rate" />
+              <i className="fa fa-eraser" aria-hidden="true"></i>
             </ListItemButton>
-            <a href="#" className="eraser" onClick={eraserRate}><i className="fa fa-eraser" aria-hidden="true"></i></a>
             <Collapse in={open3} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <Box>
@@ -1418,8 +1249,8 @@ export default function App() {
                 {open4 ? <ExpandLess /> : <ExpandMore />}
               </ListItemIcon>
               <ListItemText primary="Pause" />
+              <i className="fa fa-eraser" aria-hidden="true"></i>
             </ListItemButton>
-            <a href="#" className="eraser" onClick={eraserbreak}><i className="fa fa-eraser" aria-hidden="true"></i></a>
             <Collapse in={open4} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <Box>
@@ -1454,4 +1285,6 @@ export default function App() {
       </Row>
     </Container>
   )
+
+
 }
