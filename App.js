@@ -38,7 +38,8 @@ export default function App() {
   const [open5, setOpen5] = React.useState(false);
   const [open6, setOpen6] = React.useState(false);
   const [open7, setOpen7] = React.useState(false);
-  const [waveurl, setwaveurl] = useState('');
+  const [blobdata2, setblobdata2] = useState([]);
+const[Wavedownlad,setWavedownlad] = useState([])
   const [Wavelist, SetWavelist] = useState([]);
   const [User, SetUser] = useState([]);
   const [FileName, setFileName] = useState([]);
@@ -48,6 +49,7 @@ export default function App() {
   const [stylespeaking, setstylespeaking] = useState([]);
   const [DisplayName1, setDisplayName1] = useState('');
   const [LocaleName1, setLocaleName1] = useState('');
+  const [recording_filename, setrecording_filename] = useState('')
   const [tts_recording_uuid, settts_recording_uuid] = useState('')
   const [input, setinput] = useState('');
   const [blobdata, setblobdata] = useState([]);
@@ -329,6 +331,7 @@ export default function App() {
     str = str.replaceAll(`text-node" `, ``);
     str = str.replaceAll(`</span>`, ``);
     str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
+    str = str.replaceAll(`<s /><mstts:express-as style="">`, ``);
     str = str.replaceAll(`<prosody rate="+">`, ``);
     str = str.replaceAll(`<prosody " rate="+">`, ``);
     str = str.replaceAll(`last-data="</>"`, ``);
@@ -427,6 +430,7 @@ export default function App() {
     str = str.replaceAll(`text-node" `, ``);
     str = str.replaceAll(`</span>`, ``);
     str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
+    str = str.replaceAll(`<s /><mstts:express-as style="">`, ``);
     str = str.replaceAll(`<prosody rate="+">`, ``);
     str = str.replaceAll(`<prosody " rate="+">`, ``);
     str = str.replaceAll(`last-data="</>"`, ``);
@@ -547,6 +551,7 @@ export default function App() {
     str = str.replaceAll(`text-node" `, ``);
     str = str.replaceAll(`</span>`, ``);
     str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
+    str = str.replaceAll(`<s /><mstts:express-as style="">`, ``);
     str = str.replaceAll(`<prosody rate="+">`, ``);
     str = str.replaceAll(`<prosody " rate="+">`, ``);
     str = str.replaceAll(`last-data="</>"`, ``);
@@ -575,15 +580,17 @@ export default function App() {
     })
       .then((response) => response.blob())
       .then((blob) => {
+        setWavedownlad(blob)
         var blob = new Blob([blob]);
-        var url2 = window.URL.createObjectURL(blob);
-        console.log('MP3 URl: ', url2);
-        url2 = document.createElement('a');
-        url2.href = url2;
+        var url = window.URL.createObjectURL(blob);
+        setWavedownlad(url)
+        url = document.createElement('a');
+        url.href = Wavedownlad;
         var file_name = "recording_tts_" + Date.now();
-        url2.setAttribute('download', `${file_name}.mp3`);
-        url2.click();
-        console.log('MP3 URl: ', url2);
+        url.setAttribute('download', `${file_name}.mp3`);
+        url.click();
+        console.log('MP3 URl: ', url);
+        
       })
       .catch(() => {
       })
@@ -629,11 +636,11 @@ export default function App() {
   // ##################################   Voice  ########################## 
   const Voice = (event) => {
     var name = document.getElementById('textid').value;
-    console.log("namedata", name)
     var name = event.currentTarget.children[1].dataset.name;
     var gender = event.currentTarget.children[1].dataset.gender;
     var lang = event.currentTarget.children[1].dataset.lang;
     var short = event.currentTarget.children[1].dataset.short;
+    var styledata = event.currentTarget.children[1].dataset.styledata
     var sel = window.getSelection();
     if (navigator.userAgent.match(/firefox|fxios/i)) {
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("data-content", "[" + name + "]");
@@ -645,58 +652,40 @@ export default function App() {
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
     }
+    
+    if (styledata == '' || styledata == undefined || styledata == null) {
+      var sel = window.getSelection();
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].removeAttribute("last-data");
+      // sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("class", "node-text");
+      // return false;
+    }
+
   };
   // ##################################   Rate  ########################## 
   const Rate = (event) => {
-    debugger
+    
     var name = event.currentTarget.innerHTML;
     var tag_seltxt = addRate('prosody', 'textid', value);
   };
   function addRate(tag, rate, value) {
-    debugger
+    
     var firstpart;
     var secondpart;
     var thirdpart;
     var finaltag;
     var selectpart = window.getSelection().toString();
-
-    var innertext2 = document.getSelection().anchorNode.parentNode.innerHTML;
-    var patt1 = "prosody";
-    var results = innertext2.match(patt1);
-    var ratealldata = document.getSelection().anchorNode.parentNode.parentNode.innerHTML;
-
-    if (ratealldata.match()[0] == "prosody") {
-      var replcdata = ratealldata.replaceAll(selectpart)
-    }
-
-    //  var matchrate = ratealldata.match("prosody")
-    // try {
-    //   var psdData2 = document.getSelection().anchorNode.parentNode.outerHTML.remove();
-    //   var check = psdData2.includes("prosody");
-    //   if (check) {
-    //     var textDataProsody2 = document.getSelection().anchorNode.parentNode.innerHTML;
-    //     document.getSelection().anchorNode.parentNode.outerHTML = textDataProsody2
-    //   }
+    var innertext2 = window.getSelection().baseNode.parentNode.innerHTML;
+    // var patt1 = "prosody";
+    // var results = innertext2.match(patt1);
+    // var ratealldata = document.getSelection().anchorNode.parentNode.parentNode.innerHTML;
+    // if (ratealldata.match()[0] == "prosody") {
+    //   var replcdata = ratealldata.replaceAll(selectpart)
     // }
-    // catch (e) {
+    // if (selectpart.length < 1) {
+    //   return false;
     // }
-    // var ratealldata= document.getSelection().anchorNode.parentNode.parentNode.innerHTML;
-
-    //   var innertext2 = document.getElementById(rate).innerHTML;
-    //   var selectpart = window.getSelection().toString();
-    //   var firstpart = document.getSelection().anchorNode.parentNode;
-    //   var secondpart =document.getSelection().anchorNode.parentNode.innerHTML
-    //  var finaltag = firstpart + secondpart + thirdpart;
-    // var selectpart = window.getSelection().baseNode.data;
-
-    if (selectpart.length < 1) {
-      return false;
-    }
-    // if(ratealldata.length > 1){
-    // var explode = replcdata.split(selectpart);
-    // firstpart = explode[0];
-
-    // else
     var explode = innertext2.split(selectpart);
     firstpart = explode[0];
     if (typeof explode[1] != "undefined")
@@ -795,8 +784,8 @@ export default function App() {
     }
   };
   const saveDatalist = (data) => {
-    console.log("demo.StyleName", data.StyleList)
-    setDisplaystyle(data ? data.StyleList : 0);
+    
+    setDisplaystyle(data ? data.StyleList : 0)
     setDisplayName1(data.DisplayName);
     setGender1(data.Gender)
     setLocalName1(data.LocalName)
@@ -820,21 +809,13 @@ export default function App() {
       })
     }
   }
-  const Speakingstyle = (e) => {
+  const Speakingstyle = (data) => {
     var name = document.getElementById('stylespeaking').value;
     setstylespeaking(name)
-    if (name == '' || name == null && name == undefined) {
-      var sel = window.getSelection();
-      console.log("sel", sel)
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
-    }
-    else {
-      var sel = window.getSelection();
-      console.log("sel", sel)
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
-    }
+    var sel = window.getSelection();
+    console.log("sel", sel)
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
   }
   const Savedata = (e) => {
     var nameewe = document.getElementsByClassName('text-node').length < 1;
@@ -915,6 +896,7 @@ export default function App() {
     str = str.replaceAll(`text-node" `, ``);
     str = str.replaceAll(`</span>`, ``);
     str = str.replaceAll(`<span data-content="`, `<s /><mstts:express-as style="`);
+    str = str.replaceAll(`<s /><mstts:express-as style="">`, ``);
     str = str.replaceAll(`<prosody rate="+">`, ``);
     str = str.replaceAll(`<prosody " rate="+">`, ``);
     str = str.replaceAll(`last-data="</>"`, ``);
@@ -929,34 +911,31 @@ export default function App() {
     var closetagBefore = '<speak  xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
     var startAftertag = '</speak>';
     var startAftertagfe = str;
+    var innertext21 = document.getElementById('textid').innerHTML;
+    
     var textdata = closetagBefore + startAftertagfe + startAftertag;
-    console.log("textdata", textdata)
-    setwithoutbrak(textdata)
-    let date = textdata;
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
       headers: {
         'Ocp-Apim-Subscription-Key': '3751687d3f494502a2b7af3f62f675dc',
         'X-Microsoft-OutputFormat': 'audio-24khz-96kbitrate-mono-mp3',
         'Content-Type': 'application/ssml+xml',
-      }, body: date
+      }, body: textdata
     })
-      .then((response) => response.blob())
-      .then((blob) => {
-        setblobdata(blob)
-        console.log("blob",blob)
-        var blob = new Blob([blob]);
-        var url = window.URL.createObjectURL(blob);
-        setwaveurl(url)
-      })
-      .catch(() => {
-      })
-    var innertext21 = document.getElementById('textid').innerHTML;
-    let datavoice = {
-      ssml: withoutbrak,
+      .then((response) => response.text())
+      .then((text) => {
+        setblobdata2(text)
+        
+        alldata = text;
+        console.log("alldata", alldata)
+      }, [])
+    var alldata;
+    console.log("alldata", alldata)
+    var datavoice = {
+      ssml: textdata,
       Voicetext: innertext21,
       tts_recording_uuid: tts_recording_uuid,
-      Wave: blobdata, FileName: FileName, Rate: value,
+      Wave: alldata, FileName: recording_filename, recording_name: FileName, Rate: value,
       Break: value1, speakingstyle: stylespeaking, Gender: Gender1,
       LocalName: LocalName1, LocaleName: LocaleName1, DisplayName: DisplayName1
     }
@@ -986,6 +965,7 @@ export default function App() {
       .catch((error) => {
         console.log("error", error);
       })
+
 
   }
   function refreshPage2() {
@@ -1043,8 +1023,9 @@ export default function App() {
     setLocalName1(data.local_name)
     setValue1(data.recording_break)
     setLocaleName1(data.locale_name)
-    setFileName(data.recording_filename)
+    setFileName(data.recording_name)
     setrecording_ssml(data.recording_ssml)
+    setrecording_filename(data.recording_filename)
     settts_recording_uuid(data.recording_uuid)
     try {
       document.getElementById("textid").innerHTML = data.recording_description;
@@ -1054,9 +1035,20 @@ export default function App() {
       console.log(e);
     }
   }
-  const eraser = () => {
+  const eraser = (data) => {
+    
+    // var innertext21 = document.getElementById('textid').innerHTML;
     var sel = window.getSelection();
-    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[JennyMultilingualNeural]");
+
+    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[JennyMultilingualNeural]");
+    if (window.getSelection().getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].getAttribute("data-content")=='[JennyMultilingualNeural]') {
+      var sel = window.getSelection();
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].removeAttribute("last-data");
+
+      return false;
+    }
   }
   const eraserRate = (event) => {
     var sel = window.getSelection();
@@ -1089,7 +1081,7 @@ export default function App() {
           {"Are you sure you want to leave without saving?"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description">  
             <br></br>
             <label>File Name </label>
             <div class="inputWithIcon inputIconBg">
@@ -1163,19 +1155,20 @@ export default function App() {
       </Dialog>
       <Row>
         <Col xs={12} md={2} className="border-round">
-          <Dropdown className="form-control ">
+          <Dropdown className="form-control Recording_text">
             <h6 className="text-center"> All Recording</h6>
             <hr />
             {
               Wavelist.map((data) => (
                 <Dropdown.Item href="#" onClick={() => Viewdata(data)}>
                   <i class="fa fa-file-text-o" ></i>
-                  <span className="voicelist">{data.recording_filename}</span>
+                  <span className="voicelist">{data.recording_name}</span>
                 </Dropdown.Item>
               )
               )
             }
           </Dropdown>
+
         </Col>
         <Col xs={12} md={7} >
           <div className="App">
@@ -1327,7 +1320,7 @@ export default function App() {
                                         <i class="fa fa-female" aria-hidden="true"></i>
                                     }
                                   />
-                                  <span className="text active" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Gender} data-lang={data.DisplayName}>{data.DisplayName}</span>
+                                  <span className="text active" data-short={data.ShortName} data-name={data.DisplayName} data-gender={data.Gender} data-lang={data.DisplayName} data-style_name={data.StyleList}>{data.DisplayName}</span>
                                 </span>
                               </span>
                             ) : null

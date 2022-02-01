@@ -369,12 +369,26 @@ input[type="text"]:focus {
   background-color: dodgerBlue;
 }
 .css-cvhtoe-MuiButtonBase-root-MuiListItemButton-root {
-  
-  width: 90%;
+  width: 90% !important;
+  float: left;
+}
+.css-e0yuwi {
+  width: 90% !important;
   float: left;
 }
 .eraser{
   width: 5%;
   float: left;
   padding: 7px 0px;
+}
+.Recording_text{
+  height: 639px;
+overflow-y: scroll;
+}
+.voiceclass .node-text::after {
+  content: attr('');
+  color: #0376d2;
+  font-weight: 600;
+  padding: 0px 0px;
+  font-size: 14px;
 }
