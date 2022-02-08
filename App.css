@@ -392,3 +392,7 @@ overflow-y: scroll;
   padding: 0px 0px;
   font-size: 14px;
 }
+.dropdown-toggle::after {
+  display: none !important;
+
+}

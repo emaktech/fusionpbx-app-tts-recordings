@@ -39,16 +39,17 @@ export default function App() {
   const [open6, setOpen6] = React.useState(false);
   const [open7, setOpen7] = React.useState(false);
   const [blobdata2, setblobdata2] = useState([]);
-const[Wavedownlad,setWavedownlad] = useState([])
+  const [Wavedownlad, setWavedownlad] = useState([])
+  const [blankselct, setblankselct] = useState([])
   const [Wavelist, SetWavelist] = useState([]);
   const [User, SetUser] = useState([]);
   const [FileName, setFileName] = useState([]);
   const [recording_ssml, setrecording_ssml] = useState([])
-  const [Gender1, setGender1] = useState('');
-  const [LocalName1, setLocalName1] = useState('');
+  const [Gender1, setGender1] = useState('Female');
+  const [LocalName1, setLocalName1] = useState('Jenny Multilingual');
   const [stylespeaking, setstylespeaking] = useState([]);
-  const [DisplayName1, setDisplayName1] = useState('');
-  const [LocaleName1, setLocaleName1] = useState('');
+  const [DisplayName1, setDisplayName1] = useState('Jenny Multilingual');
+  const [LocaleName1, setLocaleName1] = useState('English (United States)');
   const [recording_filename, setrecording_filename] = useState('')
   const [tts_recording_uuid, settts_recording_uuid] = useState('')
   const [input, setinput] = useState('');
@@ -180,7 +181,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
         var suffixNode = "<voice class='voiceclass' data-content='' name='en-US-JennyMultilingualNeural' Gender='Female'><span  class='text-node'><br/></span></voice>";
         newEle.innerHTML = suffixNode;
         docFragment.appendChild(newEle);
-        if (navigator.userAgent.match(/firefox|fxios/i)) {
+        if (window.navigator.userAgent.match(/firefox|fxios\/([0-9]+)\./i)) {
           var range = window.getRangeAt(0);
         }
         else {
@@ -582,15 +583,15 @@ const[Wavedownlad,setWavedownlad] = useState([])
       .then((blob) => {
         setWavedownlad(blob)
         var blob = new Blob([blob]);
-        var url = window.URL.createObjectURL(blob);
-        setWavedownlad(url)
-        url = document.createElement('a');
-        url.href = Wavedownlad;
+        var url2 = window.URL.createObjectURL(blob);
+        setWavedownlad(url2)
+        url2 = document.createElement('a');
+        url2.href = Wavedownlad;
         var file_name = "recording_tts_" + Date.now();
-        url.setAttribute('download', `${file_name}.mp3`);
-        url.click();
-        console.log('MP3 URl: ', url);
-        
+        url2.setAttribute('download', `${file_name}.mp3`);
+        url2.click();
+        console.log('MP3 URl: ', url2);
+
       })
       .catch(() => {
       })
@@ -642,66 +643,69 @@ const[Wavedownlad,setWavedownlad] = useState([])
     var short = event.currentTarget.children[1].dataset.short;
     var styledata = event.currentTarget.children[1].dataset.styledata
     var sel = window.getSelection();
-    if (navigator.userAgent.match(/firefox|fxios/i)) {
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("data-content", "[" + name + "]");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("name", "" + short + "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.setAttribute("Gender", "" + gender + "");
+
+    if (window.getSelection().anchorNode.parentNode.nodeName == "SPAN") {
+      window.getSelection().anchorNode.parentNode.parentNode.setAttribute("data-content", "[" + name + "]");
+      window.getSelection().anchorNode.parentNode.parentNode.setAttribute("name", "" + short + "");
+      window.getSelection().anchorNode.parentNode.parentNode.setAttribute("Gender", "" + gender + "");
     }
     else {
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[" + name + "]");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("name", "" + short + "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("Gender", "" + gender + "");
+      window.getSelection().anchorNode.parentNode.parentNode.parentNode.setAttribute("data-content", "[" + name + "]");
+      window.getSelection().anchorNode.parentNode.parentNode.parentNode.setAttribute("name", "" + short + "");
+      window.getSelection().anchorNode.parentNode.parentNode.parentNode.setAttribute("Gender", "" + gender + "");
     }
-    
     if (styledata == '' || styledata == undefined || styledata == null) {
-      var sel = window.getSelection();
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
       sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].removeAttribute("last-data");
-      // sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("class", "node-text");
-      // return false;
+      return false;
     }
-
   };
   // ##################################   Rate  ########################## 
   const Rate = (event) => {
-    
+    debugger
     var name = event.currentTarget.innerHTML;
     var tag_seltxt = addRate('prosody', 'textid', value);
   };
   function addRate(tag, rate, value) {
-    
     var firstpart;
     var secondpart;
     var thirdpart;
     var finaltag;
-    var selectpart = window.getSelection().toString();
-    var innertext2 = window.getSelection().baseNode.parentNode.innerHTML;
-    // var patt1 = "prosody";
-    // var results = innertext2.match(patt1);
-    // var ratealldata = document.getSelection().anchorNode.parentNode.parentNode.innerHTML;
-    // if (ratealldata.match()[0] == "prosody") {
-    //   var replcdata = ratealldata.replaceAll(selectpart)
-    // }
-    // if (selectpart.length < 1) {
-    //   return false;
-    // }
-    var explode = innertext2.split(selectpart);
-    firstpart = explode[0];
-    if (typeof explode[1] != "undefined")
-      thirdpart = explode[1];
-    else
-      thirdpart = "";
-    if (value == 0) {
-      return null
+    if (window.getSelection().toString() == '') {
+      return swal({
+        text: "Make sure you've selected voices for the text !",
+        button: "X",
+        dangerMode: true,
+      })
     }
     else {
-      secondpart = '<prosody id="prosody" class="rate" data-name="' + value + "%" + '">' + selectpart + '</prosody>';
+      var selectpart = window.getSelection().toString();
+      debugger
+      // debuggernavigator.userAgent.match(/firefox|fxios/i
+      // if (window.navigator.userAgent.match(/firefox|fxios\/([0-9]+)\./i)) {
+      var innertext2 = window.getSelection().anchorNode.parentNode.innerHTML;
+
+      // else {
+      //   var innertext2 = window.getSelection().anchorNode.parentNode.parentNode.innerHTML;
+      // }
+      var explode = innertext2.split(selectpart);
+      firstpart = explode[0];
+      if (typeof explode[1] != "undefined")
+        thirdpart = explode[1];
+      else
+        thirdpart = "";
+      if (value == 0) {
+        return null
+      }
+      else {
+        secondpart = '<prosody id="prosody" class="rate" data-name="' + value + "%" + '">' + selectpart + '</prosody>';
+      }
+      finaltag = firstpart + secondpart + thirdpart;
+      var x = document.getSelection().anchorNode.parentNode;
+      x.innerHTML = finaltag;
+      return finaltag;
     }
-    finaltag = firstpart + secondpart + thirdpart;
-    var x = document.getSelection().anchorNode.parentNode;
-    x.innerHTML = finaltag;
-    return finaltag;
   }
   // ##################################  Pause  ########################## 
   const Pause = (event) => {
@@ -712,11 +716,21 @@ const[Wavedownlad,setWavedownlad] = useState([])
   function addPause(tag, pause, value1) {
     var innertext3 = document.getElementById(pause).innerHTML;
     var selectpart = window.getSelection().anchorOffset;
-    var baseNode = window.getSelection().baseNode.data;
-    var text_value = window.getSelection().anchorNode.parentElement.innerHTML;
-    var rem_val = text_value.split(baseNode);
-    var part1 = baseNode.substring(0, selectpart);
-    var part2 = baseNode.substring(selectpart, window.getSelection().baseNode.length);
+    if (window.navigator.userAgent.match(/firefox|fxios\/([0-9]+)\./i)) {
+      var baseNode = window.getSelection().anchorNode.data;
+      var text_value = window.getSelection().anchorNode.parentElement.innerHTML;
+      var rem_val = text_value.split(baseNode);
+      var part1 = window.getSelection().anchorNode.data.substring(0, selectpart);
+      var part2 = window.getSelection().anchorNode.data.substring(selectpart, window.getSelection().anchorNode.length);
+    }
+    else {
+      var baseNode = window.getSelection().baseNode.data;
+      var text_value = window.getSelection().anchorNode.parentElement.innerHTML;
+      var rem_val = text_value.split(baseNode);
+      var part1 = window.getSelection().baseNode.data.substring(0, selectpart);
+      var part2 = window.getSelection().baseNode.data.substring(selectpart, window.getSelection().baseNode.length);
+    }
+    debugger
     if (value1 == 0) {
       return null
     }
@@ -784,7 +798,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
     }
   };
   const saveDatalist = (data) => {
-    
+
     setDisplaystyle(data ? data.StyleList : 0)
     setDisplayName1(data.DisplayName);
     setGender1(data.Gender)
@@ -810,12 +824,29 @@ const[Wavedownlad,setWavedownlad] = useState([])
     }
   }
   const Speakingstyle = (data) => {
+    debugger
     var name = document.getElementById('stylespeaking').value;
     setstylespeaking(name)
     var sel = window.getSelection();
     console.log("sel", sel)
-    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
-    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
+    if (window.getSelection().anchorNode.parentNode.localName == "prosody") {
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
+    }
+    else {
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "[" + name + "]");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "</>");
+    }
+    if (window.getSelection().anchorNode.parentNode.localName == "prosody") {
+      if (document.getElementById('stylespeaking').value == '') {
+        sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
+        sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
+      }
+    }
+    if (document.getElementById('stylespeaking').value == '') {
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
+      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
+    }
   }
   const Savedata = (e) => {
     var nameewe = document.getElementsByClassName('text-node').length < 1;
@@ -912,7 +943,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
     var startAftertag = '</speak>';
     var startAftertagfe = str;
     var innertext21 = document.getElementById('textid').innerHTML;
-    
+
     var textdata = closetagBefore + startAftertagfe + startAftertag;
     fetch("https://canadacentral.tts.speech.microsoft.com/cognitiveservices/v1", {
       method: 'POST',
@@ -925,7 +956,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
       .then((response) => response.text())
       .then((text) => {
         setblobdata2(text)
-        
+
         alldata = text;
         console.log("alldata", alldata)
       }, [])
@@ -945,7 +976,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-        Origin: "https://158.69.73.50",
+        // Origin: "https://158.69.73.50",
       }, body: JSON.stringify(datavoice)
     })
       .then((response) => response.text())
@@ -965,7 +996,6 @@ const[Wavedownlad,setWavedownlad] = useState([])
       .catch((error) => {
         console.log("error", error);
       })
-
 
   }
   function refreshPage2() {
@@ -1036,28 +1066,30 @@ const[Wavedownlad,setWavedownlad] = useState([])
     }
   }
   const eraser = (data) => {
-    
+    debugger
     // var innertext21 = document.getElementById('textid').innerHTML;
-    var sel = window.getSelection();
 
-    sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].setAttribute("data-content", "[JennyMultilingualNeural]");
-    if (window.getSelection().getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("voice")[0].getAttribute("data-content")=='[JennyMultilingualNeural]') {
+    window.getSelection().anchorNode.parentNode.parentNode.setAttribute("data-content", "[JennyMultilingualNeural]");
+    window.getSelection().anchorNode.parentNode.parentNode.setAttribute("name", "en-US-JennyMultilingualNeural");
+    window.getSelection().anchorNode.parentNode.parentNode.setAttribute("Gender", "Female");
+    if (window.getSelection().anchorNode.parentNode.parentNode.dataset.content == '[JennyMultilingualNeural]') {
+      debugger
       var sel = window.getSelection();
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("data-content", "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].setAttribute("last-data", "");
-      sel.getRangeAt(0).commonAncestorContainer.parentNode.parentNode.parentNode.getElementsByTagName("span")[0].removeAttribute("last-data");
-
-      return false;
+      window.getSelection().anchorNode.parentNode.parentNode.setAttribute("data-content", "");
+      window.getSelection().anchorNode.parentNode.parentNode.setAttribute("name", "");
+      window.getSelection().anchorNode.parentNode.parentNode.setAttribute("Gender", "");
+      return false
     }
   }
   const eraserRate = (event) => {
+    debugger
     var sel = window.getSelection();
     try {
       let psdData = sel.anchorNode.parentNode.outerHTML;
       let check = psdData.includes("prosody");
       if (check) {
-        let textDataProsody = sel.anchorNode.parentNode.innerHTML;
-        sel.anchorNode.parentNode.outerHTML = textDataProsody
+        let textDataProsody = sel.anchorNode.parentNode.parentNode.innerHTML;
+        sel.anchorNode.parentNode.parentNode.outerHTML = textDataProsody
       }
     }
     catch (e) {
@@ -1065,13 +1097,20 @@ const[Wavedownlad,setWavedownlad] = useState([])
   };
   const eraserbreak = (event) => {
     var sel = window.getSelection();
+    debugger
     var nameewe2 = window.getSelection().getRangeAt(0).commonAncestorContainer.parentNode.parentNode.innerText
-    window.getSelection().baseNode.nextSibling.remove();
+    if (window.navigator.userAgent.match(/firefox|fxios\/([0-9]+)\./i)) {
+      window.getSelection().anchorNode.nextSibling.remove();
+    }
+    else {
+      window.getSelection().baseNode.nextSibling.remove();
+    }
     window.getSelection().getRangeAt(0).commonAncestorContainer.innerHTML = nameewe2;
   };
   return (
     <Container fluid>
       <br />
+      {blankselct}
       <Dialog
         open={open5}
         onClose={handleClose}
@@ -1081,7 +1120,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
           {"Are you sure you want to leave without saving?"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">  
+          <DialogContentText id="alert-dialog-description">
             <br></br>
             <label>File Name </label>
             <div class="inputWithIcon inputIconBg">
@@ -1156,7 +1195,7 @@ const[Wavedownlad,setWavedownlad] = useState([])
       <Row>
         <Col xs={12} md={2} className="border-round">
           <Dropdown className="form-control Recording_text">
-            <h6 className="text-center"> All Recording</h6>
+            <h6 className="text-center"> All Recordings</h6>
             <hr />
             {
               Wavelist.map((data) => (
@@ -1175,25 +1214,18 @@ const[Wavedownlad,setWavedownlad] = useState([])
             <Row>
               <Col xs={12} md={3}>
                 <Dropdown>
-                  <Dropdown.Toggle id="dropdown-basic" className="save">
+                  <Dropdown.Toggle id="dropdown-basic" href="" onClick={handleClickOpen2} className="save">
                     <i className="fa fa-file-o"></i> New Recording
                   </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="" onClick={handleClickOpen2}><i class="fa fa-file-text-o"></i> New text file</Dropdown.Item>
-                    <Dropdown.Item href="">
-                      <i class="fa fa-file-excel-o" ></i> New lexicon file
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
+
                 </Dropdown>
               </Col>
               <Col xs={12} md={2}>
                 <Dropdown>
-                  <Dropdown.Toggle id="dropdown-basic" className="save">
-                    <i className="fa fa-floppy-o"></i> Save
+                  <Dropdown.Toggle id="dropdown-basic" onClick={handleClickOpen} className="save">
+                    <i className="fa fa-floppy-o"></i> Save as
                   </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="" onClick={handleClickOpen}><i class="fa fa-file-audio-o" ></i> Save as</Dropdown.Item>
-                  </Dropdown.Menu>
+
                 </Dropdown>
               </Col>
               <Col xs={12} md={2}>

@@ -11,11 +11,12 @@ code {
 .line{
   width: 4px !important;
   margin-top: 6px !important;
+  text-decoration: none!important;
 }
 .line2{
   margin-top: 6px !important;
   width: 100px;
-
+  text-decoration: none!important;
 }
 .line3{
   margin: 5px 10px;
