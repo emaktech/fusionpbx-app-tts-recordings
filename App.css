@@ -37,8 +37,8 @@
 .List{
   display: inline-block;
   border: 1px solid #ddd;
-  font-size: 12px;
-  margin: 5px;
+  font-size: 11px;
+  margin: 4px;
   padding: 2px;
 }
 .List1{
@@ -223,7 +223,6 @@ hr:not([size]) {
   display:block !important;
   }
   div#textid div:before {
-    content: counter(line-number) ".";
     display: inline-block;
     position: relative;
     font-size: .75rem;
@@ -313,6 +312,7 @@ div#textid div span.text-node {
 div#textid div {
   padding-left: 9px;
   margin-bottom: 40px;
+      clear: both;
 }
 s{
   text-decoration-line: none !important;
@@ -396,3 +396,35 @@ overflow-y: scroll;
   display: none !important;
 
 }
+#player
+{
+ background-color:#084B8A;
+ width:400px;
+ margin-left:300px;
+ padding:5px;
+ box-sizing:border-box;
+}
+input[type="image"]
+{
+ float:left;
+ height:20px;
+ margin-left:2px;
+ margin-right:5px;
+ margin-top:2px;
+}
+#vol_img
+{
+ margin-left:150px;
+ width:20px;
+}
+/* div#textid voice:before {
+  content: attr(data-content);
+  display: inline-block;
+  position: relative;
+  font-size: .75rem;
+  text-align: center;
+  line-height: 1;
+  z-index: 1;
+  font-weight: 600;
+  color: #0376d2;
+} */
