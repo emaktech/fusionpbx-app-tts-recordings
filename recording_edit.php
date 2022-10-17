@@ -77,8 +77,7 @@
 		$recording_text = $_POST["recording_text"];
 		$pitch = $_POST["pitch"];
 		$speaking_rate = $_POST["speaking_rate"];
-		$generated_ssml = $_POST["generated_ssml"];
-		
+
 		//sanitize recording name
 		$recording_name = str_replace("'", '', $recording_name);
 	}
@@ -146,14 +145,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			//generate SSML from text if format is plain text
 				if ($is_text_ssml != "true") {
-					$recording_ssml = '<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">'. $recording_text . '</speak>';
-					
+					$recording_ssml = '<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">';
+					$recording_ssml .= '<voice name="' . $recording_voice . '"><prosody rate="';
+					$speaking_rate_val = floatval($speaking_rate);
+					if ($speaking_rate_val < 0) {
+						$speaking_rate_val = 1.0;
+					}
+					else if ($speaking_rate_val > 3.0) {
+						$speaking_rate_val = 3.0;
+					}
+					$recording_ssml .= round(($speaking_rate_val - 1.0) * 100.0) . '%" pitch="';
+					$pitch_val = floatval($pitch);
+					if ($pitch_val < 0) {
+						$pitch_val = 1.0;
+					}
+					else if ($pitch_val > 3.0) {
+						$pitch_val = 3.0;
+					}
+					$recording_ssml .= round(($pitch_val - 1.0) * 50.0) . '%">' . $recording_text . '</prosody></voice></speak>';
 				}
 				else {
 					$recording_ssml = $recording_text;
 				}
 
-				
 			//(re)generate tts audio
 				if ($action == "add") {
 					$date_created = time();
@@ -205,7 +219,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$array['tts_recordings'][0]['recording_filename'] = $recording_filename;
 				$array['tts_recordings'][0]['date_created'] = $date_created;
 				$array['tts_recordings'][0]['date_updated'] = $date_updated;
-				$array['tts_recordings'][0]['recording_ssml'] = $recording_ssml;
 
 			//assign temp permission
 				$p = new permissions;
@@ -289,6 +302,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	$document['title'] = $text['title-tts-recording'];
 	require_once "resources/header.php";
+
+//styling
 ?>
 <link href="resources/css/studio.css" rel="stylesheet">
 <?php
@@ -311,29 +326,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action != "add" && permission_exists('tts_recording_delete')) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 	}
-
-?>
-
-<div class="container">
-	<div class="files-container">
-	These are the files
-	</div>
-	<div class="editor-container">
-	This is the editor container
-	</div>
-	<div class="settings-container">
-	These are the settings-container
-	</div>
-</div>
-
-
-
-
-
-<?php
-
-
-
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -401,29 +393,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-recording_text']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea type='text' id='recording_text' name='recording_text' class='formfld' onmouseup='getSelectedText();'>".$recording_text."</textarea>\n";
+	echo "	<textarea type='text' id='recording_text' name='recording_text' class='formfld' style='width: 65%; height: 175px;'>".$recording_text."</textarea>\n";
 	echo "<br />\n";
 	echo "	".$text['description-recording_text']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-recording_pronunciation']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='recording_pronunciation' id='recording_pronunciation'>\n";
-	echo "		<option value='' >Default</option>\n";
-	echo "		<option value='address' >Address</option>\n";
-	echo "		<option value='cardinal' >Cardinal, Number</option>\n";
-	echo "		<option value='characters' >Characters, Spell-out</option>\n";
-	echo "		<option value='date' >Date</option>\n";
-		
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-recording_voice']."\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -642,7 +614,28 @@ function tts_play_pause() {
 		if (isSsml.value == 'true') {
 			blockGeneratedSsml.style.display = 'none';
 		} else {
-			synthesisSsml = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"http://www.w3.org/2001/mstts\" xmlns:emo=\"http://www.w3.org/2009/10/emotionml\" version=\"1.0\" xml:lang=\"en-US\">\n"+ recordingText.value + "</speak>";
+			synthesisSsml = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"http://www.w3.org/2001/mstts\" xmlns:emo=\"http://www.w3.org/2009/10/emotionml\" version=\"1.0\" xml:lang=\"en-US\">\n";
+			synthesisSsml += "<voice name=\"" + voiceOptions.value + "\"><prosody rate=\"";
+			speaking_rate_val = parseFloat(speakingRate.value);
+			if (isNaN(speaking_rate_val)) {
+				speaking_rate_val = 1.00;
+			}
+			if (speaking_rate_val < 0) {
+				speaking_rate_val = 1.0;
+			} else if (speaking_rate_val > 3.0) {
+				speaking_rate_val = 3.0;
+			}
+			synthesisSsml += Math.round((speaking_rate_val - 1.0) * 100.0) + "%\" pitch=\"";
+			pitch_val = parseFloat(pitch.value);
+			if (isNaN(pitch_val)) {
+				pitch_val = 1.0;
+			}
+			if (pitch_val < 0) {
+				pitch_val = 1.0;
+			} else if (pitch_val > 3.0) {
+				pitch_val = 3.0;
+			}
+			synthesisSsml += Math.round((pitch_val - 1.0) * 50.0) + "%\">" + recordingText.value + "</prosody></voice></speak>";
 			generatedSsml.value = synthesisSsml;
 			blockGeneratedSsml.style.display = "";
 		}
@@ -754,128 +747,6 @@ function tts_stop() {
 	stopButton.style.display = 'none';
 	highlightDiv.innerHTML = "";
 	blockHighlight.style.display = "none";
-}
-
-function getSelectedText() {
-    if (window.getSelection) {
-        txt = window.getSelection();
-		//alert(txt);
-    } else if (window.document.getSelection) {
-        txt =window.document.getSelection();
-    } else if (window.document.selection) {
-        txt = window.document.selection.createRange().text;
-    }
-    return txt;  
-}
-
-document.getElementById('recording_voice').onchange = function() {
-	var voice_val = document.getElementById("recording_voice").value;
-	
-  // calls the addTagSel() function for "my_textarea", displaying the selected text and tag into an alert window
-  var tag_seltxt = addTagSel('voice name="'+voice_val+'"','voice', 'recording_text');
- // alert(tag_seltxt);
-};
-
-document.getElementById('speaking_rate').onchange = function() {
-	
-	var rate_val = document.getElementById("speaking_rate").value;
-	
-	speaking_rate_val = parseFloat(rate_val);
-			if (isNaN(speaking_rate_val)) {
-				speaking_rate_val = 1.00;
-			}
-			if (speaking_rate_val < 0) {
-				speaking_rate_val = 1.0;
-			} else if (speaking_rate_val > 3.0) {
-				speaking_rate_val = 3.0;
-			}
-
-			var rate_value=Math.round((speaking_rate_val - 1.0) * 100.0) + "%";
-	var tag_seltxt1 = addTagSel('prosody rate="'+rate_value+'"','prosody', 'recording_text');
- alert(tag_seltxt1);
-};
-
-/*document.getElementById('pitch').onchange = function() {
-	
-	var pitch_val = document.getElementById("pitch").value;
-	
-	speaking_pitch_val = parseFloat(pitch_val);
-			if (isNaN(speaking_pitch_val)) {
-				speaking_pitch_val = 1.00;
-			}
-			if (speaking_pitch_val < 0) {
-				speaking_pitch_val = 1.0;
-			} else if (speaking_pitch_val > 3.0) {
-				speaking_pitch_val = 3.0;
-			}
-
-	var rate_val = document.getElementById("speaking_rate").value;
-	
-	speaking_rate_val = parseFloat(rate_val);
-			if (isNaN(speaking_rate_val)) {
-				speaking_rate_val = 1.00;
-			}
-			if (speaking_rate_val < 0) {
-				speaking_rate_val = 1.0;
-			} else if (speaking_rate_val > 3.0) {
-				speaking_rate_val = 3.0;
-			}
-
-			var rate_value=Math.round((speaking_rate_val - 1.0) * 100.0) + "%";
-			var pitch_value=Math.round((speaking_pitch_val - 1.0) * 50.0) + "%";
-	var tag_seltxt1 = addTagSel('prosody rate="'+rate_value+'" pitch="'+pitch_value+'"','prosody', 'recording_text');
- alert(tag_seltxt2);
-};*/
-
-function addTagSel(tag_before,tag_after, idelm) {
-	debugger;
- if(idelm != '')
- {
-  var tag_type = new Array('<', '>');        // for BBCode tag, replace with:  new Array('[', ']');
-  var txta = document.getElementById(idelm);
-  
-  var start = tag_type[0] + tag_before + tag_type[1];
-  var end = tag_type[0] +'/'+ tag_after +  tag_type[1];
-  var IE = /*@cc_on!@*/false;    // this variable is false in all browsers, except IE
-
-  if (IE) {
-    var r = document.selection.createRange();
-    var tr = txta.createTextRange();
-    var tr2 = tr.duplicate();
-    tr2.moveToBookmark(r.getBookmark());
-    tr.setEndPoint('EndToStart',tr2);
-    var tag_seltxt = start + r.text + end;
-    var the_start = txta.value.replace(/[\r\n]/g,'.').indexOf(r.text.replace(/[\r\n]/g,'.'),tr.text.length);
-    txta.value = txta.value.substring(0, the_start) + tag_seltxt + txta.value.substring(the_start + tag_seltxt.length, txta.value.length);
-
-    var pos = txta.value.length - end.length;    // Sets location for cursor position
-    tr.collapse(true);
-    tr.moveEnd('character', pos);        // start position
-    tr.moveStart('character', pos);        // end position
-    tr.select();                 // selects the zone
-  }
-  else if (txta.selectionStart || txta.selectionStart == "0") {
-    var startPos = txta.selectionStart;
-    var endPos = txta.selectionEnd;
-    var tag_seltxt = start + txta.value.substring(startPos, endPos) + end;
-    txta.value = txta.value.substring(0, startPos) + tag_seltxt + txta.value.substring(endPos, txta.value.length);
-
-    // Place the cursor between formats in #txta
-    txta.setSelectionRange((endPos+start.length),(endPos+start.length));
-    txta.focus();
-  }
-  var txt_data = document.getElementById(idelm).value;
-  let val_exist = txt_data.search("voice");
-  if(val_exist>0)
-  {
-	return "</voice>"+tag_seltxt+"<voice>";
-  }
-  else
-  {
-	return tag_seltxt;
-  }
-  
- }
 }
 </script>
 <?php
